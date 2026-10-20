@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SortSmart AI — Deteksi Sampah</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#172033;background:#f3f6fb}
+*{box-sizing:border-box}body{margin:0;padding:20px}.app{max-width:760px;margin:auto}
+header{padding:22px 20px;border-radius:20px;background:linear-gradient(135deg,#123b2a,#17834c);color:white}
+h1{margin:0 0 6px;font-size:clamp(1.5rem,5vw,2.2rem)}p{line-height:1.5}.muted{color:#667085;font-size:.92rem}
+header p{margin:0;color:#e4f5e9}.panel{background:white;padding:18px;border-radius:18px;margin-top:16px;box-shadow:0 5px 20px #16223a0d}
+.video-wrap{position:relative;background:#101828;border-radius:14px;overflow:hidden;min-height:210px;display:grid;place-items:center}
+video{width:100%;max-height:440px;display:block;object-fit:cover}.placeholder{color:#d0d5dd;padding:30px;text-align:center}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+button{border:0;border-radius:12px;padding:12px 16px;font-weight:700;font-size:1rem;cursor:pointer}
+.primary{background:#15803d;color:white}.secondary{background:#e8eef5;color:#172033}.danger{background:#fee4e2;color:#912018}
+button:disabled{opacity:.45;cursor:not-allowed}
+.status{margin-top:12px;font-size:.9rem;color:#475467}
+.result{border:1px solid #e4e7ec;border-radius:14px;padding:16px;margin-top:14px}
+.result h2{margin:0 0 8px;font-size:1.25rem}.pill{display:inline-block;padding:5px 10px;border-radius:999px;font-size:.85rem;font-weight:800}
+.org{background:#dcfae6;color:#166534}.non{background:#dbeafe;color:#1d4ed8}.unknown{background:#fef0c7;color:#92400e}
+.bar{height:8px;background:#eaecf0;border-radius:20px;overflow:hidden;margin:8px 0}.bar span{display:block;height:100%;background:#16a34a;width:0}
+ul{padding-left:20px;line-height:1.6}.small{font-size:.82rem;color:#667085}
+footer{padding:18px 4px;color:#667085;font-size:.82rem}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>♻️ SortSmart AI</h1>
+  <p>Deteksi objek dari kamera dan perkiraan kategori sampah.</p>
+</header>
+
+<section class="panel">
+  <h2>📷 Kamera</h2>
+  <p class="muted">Izinkan akses kamera. Arahkan satu benda ke kamera dengan pencahayaan yang cukup.</p>
+  <div class="video-wrap">
+    <video id="video" autoplay playsinline muted hidden></video>
+    <div id="placeholder" class="placeholder">Kamera belum dimulai</div>
+  </div>
+  <div class="actions">
+    <button id="start" class="primary">Mulai kamera & AI</button>
+    <button id="stop" class="secondary" disabled>Hentikan</button>
+    <button id="scan" class="secondary" disabled>Deteksi sekarang</button>
+  </div>
+  <div id="status" class="status">Model AI belum dimuat.</div>
+</section>
+
+<section class="panel">
+  <h2>Hasil deteksi</h2>
+  <div class="result" aria-live="polite">
+    <h2 id="object">Belum ada hasil</h2>
+    <span id="category" class="pill unknown">Menunggu deteksi</span>
+    <p id="advice">Mulai kamera untuk mencoba deteksi.</p>
+    <div class="small">Keyakinan deteksi objek: <strong id="confidence">—</strong></div>
+    <div class="bar"><span id="bar"></span></div>
+  </div>
+  <p class="small">Catatan: versi awal ini memakai model COCO-SSD umum, bukan model khusus sampah. Hasil kategori adalah perkiraan berdasarkan nama objek dan bisa keliru.</p>
+</section>
+
+<section class="panel">
+  <h2>🧠 Bagaimana AI bekerja?</h2>
+  <ol>
+    <li>COCO-SSD mencari objek yang dikenal di gambar kamera.</li>
+    <li>Aturan sederhana memetakan beberapa objek ke kategori organik/anorganik.</li>
+    <li>Objek yang tidak dikenali aturan ditandai “Belum yakin”, bukan ditebak sembarangan.</li>
+  </ol>
+  <p>Untuk hasil yang lebih akurat, latih model khusus dengan foto sampah lokal—misalnya kulit buah, sisa makanan, daun, plastik, kaleng, kaca, dan kertas—menggunakan <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">Google Teachable Machine</a>, lalu hubungkan model hasil ekspor ke aplikasi.</p>
+</section>
+<footer>Prototipe edukasi. Kamera berjalan di browser; model diunduh dari CDN saat pertama kali digunakan. Gunakan HTTPS atau localhost agar akses kamera diizinkan.</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+<script>
+const video = document.getElementById('video');
+const placeholder = document.getElementById('placeholder');
+const startBtn = document.getElementById('start');
+const stopBtn = document.getElementById('stop');
+const scanBtn = document.getElementById('scan');
+const statusEl = document.getElementById('status');
+let stream = null, model = null, busy = false, loopId = null;
+
+const organic = new Set(['banana','apple','orange','broccoli','carrot','sandwich','pizza','donut','cake']);
+const nonOrganic = new Set(['bottle','cup','wine glass','fork','knife','spoon','bowl','can','book','cell phone','keyboard','remote','scissors','vase','clock','laptop','tv','mouse','toothbrush']);
+function classify(name){
+  if (organic.has(name)) return {label:'ORGANIK', cls:'org', advice:'Kemungkinan sampah organik. Pisahkan dari plastik dan bahan berbahaya; jika sesuai, olah menjadi kompos.'};
+  if (nonOrganic.has(name)) return {label:'ANORGANIK', cls:'non', advice:'Kemungkinan sampah anorganik. Periksa bahan dan kondisi benda, lalu pilah untuk digunakan kembali atau didaur ulang jika diterima setempat.'};
+  return {label:'BELUM YAKIN', cls:'unknown', advice:'Model mengenali objek, tetapi aturan belum bisa menentukan kategorinya dengan andal. Periksa manual atau gunakan model khusus sampah.'};
+}
+function showResult(pred){
+  if(!pred){
+    document.getElementById('object').textContent='Tidak ada objek yang cukup jelas';
+    document.getElementById('category').textContent='BELUM YAKIN';
+    document.getElementById('category').className='pill unknown';
+    document.getElementById('advice').textContent='Coba dekatkan benda, tambah pencahayaan, dan gunakan latar belakang sederhana.';
+    document.getElementById('confidence').textContent='—';
+    document.getElementById('bar').style.width='0%';
+    return;
+  }
+  const c=classify(pred.class), pct=Math.round(pred.score*100);
+  document.getElementById('object').textContent='Objek: '+pred.class;
+  document.getElementById('category').textContent=c.label;
+  document.getElementById('category').className='pill '+c.cls;
+  document.getElementById('advice').textContent=c.advice;
+  document.getElementById('confidence').textContent=pct+'%';
+  document.getElementById('bar').style.width=pct+'%';
+}
+async function detectOnce(){
+  if(!model || !video.videoWidth || busy) return;
+  busy=true;
+  try {
+    const predictions=await model.detect(video, 10, 0.45);
+    predictions.sort((a,b)=>b.score-a.score);
+    showResult(predictions[0] || null);
+    statusEl.textContent=predictions.length ? 'AI aktif — deteksi diperbarui.' : 'AI aktif — belum menemukan objek yang jelas.';
+  } catch(e) {
+    statusEl.textContent='Deteksi gagal: '+e.message;
+  } finally { busy=false; }
+}
+function startLoop(){
+  stopLoop();
+  const tick=async()=>{ await detectOnce(); if(stream) loopId=setTimeout(tick,900); };
+  tick();
+}
+function stopLoop(){ if(loopId){clearTimeout(loopId);loopId=null;} }
+startBtn.addEventListener('click', async()=>{
+  startBtn.disabled=true;
+  statusEl.textContent='Memuat model AI… perlu koneksi internet pada penggunaan pertama.';
+  try{
+    if(!model) model=await cocoSsd.load({base:'lite_mobilenet_v2'});
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
+    video.srcObject=stream; video.hidden=false; placeholder.hidden=true;
+    await video.play();
+    stopBtn.disabled=false; scanBtn.disabled=false;
+    statusEl.textContent='Kamera aktif. Arahkan ke satu benda.';
+    startLoop();
+  }catch(e){
+    statusEl.textContent='Tidak bisa memulai: '+(e.name==='NotAllowedError'?'izin kamera ditolak. Izinkan kamera di pengaturan browser.':e.message||e);
+    startBtn.disabled=false;
+    if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  }
+});
+stopBtn.addEventListener('click',()=>{
+  stopLoop();
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  video.srcObject=null; video.hidden=true; placeholder.hidden=false;
+  placeholder.textContent='Kamera dihentikan';
+  startBtn.disabled=false; stopBtn.disabled=true; scanBtn.disabled=true;
+  statusEl.textContent='Kamera dihentikan.';
+});
+scanBtn.addEventListener('click',detectOnce);
+window.addEventListener('pagehide',()=>{
+  stopLoop(); if(stream) stream.getTracks().forEach(t=>t.stop());
+});
+</script>
+</body>
+</html>
