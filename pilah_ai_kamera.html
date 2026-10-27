@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10231b">
+<title>PilahAI — Deteksi Sampah</title>
+<style>
+:root{--bg:#f4f7f5;--ink:#17251e;--muted:#68776e;--green:#18794e;--line:#dce6df;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:#10231b;color:#fff;padding:22px 18px 26px}
+.top{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:22px;font-weight:800;letter-spacing:-.5px}.brand span{color:#8fe0ad}
+.pill{font-size:12px;border:1px solid #456252;border-radius:999px;padding:6px 10px;color:#d5e8db}
+.hero{max-width:1100px;margin:22px auto 0;padding:0 2px}
+h1{font-size:clamp(27px,5vw,42px);line-height:1.1;letter-spacing:-1.3px;margin:0 0 10px}
+.hero p{margin:0;color:#c5d8cc;max-width:650px}
+main{max-width:1100px;margin:22px auto;padding:0 14px 34px}
+.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(270px,.8fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 5px 22px #163d2510}
+.card h2{font-size:17px;margin:0 0 12px}
+.video-wrap{position:relative;background:#0b1510;border-radius:13px;overflow:hidden;aspect-ratio:4/3;display:grid;place-items:center}
+video,canvas{position:absolute;width:100%;height:100%;object-fit:contain;inset:0}
+#video{transform:scaleX(-1)} #overlay{pointer-events:none}
+.placeholder{color:#d2e1d7;text-align:center;padding:24px;max-width:300px}
+.placeholder .cam{font-size:42px;margin-bottom:8px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button{border:0;border-radius:11px;padding:11px 14px;font:inherit;font-weight:700;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.primary{background:#18794e;color:white}.secondary{background:#edf4ef;color:#214a32}.dark{background:#10231b;color:white}
+.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;margin:12px 0 0}
+.dot{width:9px;height:9px;border-radius:50%;background:#a4b2a9}.dot.live{background:#1baf68;box-shadow:0 0 0 4px #1baf6820}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stat{padding:12px;border:1px solid var(--line);border-radius:13px}
+.stat .num{font-size:27px;font-weight:800;line-height:1.2}.stat .label{font-size:12px;color:var(--muted);margin-top:5px}
+.org .num{color:#16804d}.anorg .num{color:#2868cb}.not .num{color:#bd7814}.unknown .num{color:#68778a}
+.latest{margin-top:16px}.result-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #edf1ee}
+.result-row:last-child{border-bottom:0}.object-name{font-weight:700;overflow-wrap:anywhere}.sub{font-size:12px;color:var(--muted)}
+.tag{font-size:11px;font-weight:800;padding:4px 7px;border-radius:7px;white-space:nowrap;height:max-content}
+.tag.org{background:#e1f6e9;color:#147643}.tag.anorg{background:#e6efff;color:#245cbb}.tag.not{background:#fff1d8;color:#8c5800}.tag.unknown{background:#edf0f4;color:#536174}
+.note{font-size:12px;color:var(--muted);margin-top:14px}
+.banner{padding:11px 12px;border-radius:11px;background:#f0f6f1;font-size:13px;color:#3c5746;margin-top:12px}
+.history-head{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+.text-btn{background:transparent;color:var(--green);padding:5px 0;font-size:13px}
+.history{max-height:190px;overflow:auto}
+.empty{color:var(--muted);font-size:13px;padding:8px 0}
+footer{max-width:1100px;margin:auto;padding:0 14px 28px;color:var(--muted);font-size:12px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.hero{margin-top:20px}.card{padding:13px}header{padding:18px 15px 23px}.pill{font-size:11px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><div class="brand">♻ Pilah<span>AI</span></div><div class="pill">Kamera · AI di browser</div></div>
+  <section class="hero"><h1>Kenali sampah,<br>mulai dari kamera.</h1><p>Deteksi objek secara langsung dan kelompokkan perkiraan hasilnya menjadi organik, anorganik, bukan sampah, atau belum dikenali.</p></section>
+</header>
+<main>
+  <div class="layout">
+    <section class="card">
+      <h2>📷 Kamera langsung</h2>
+      <div class="video-wrap" id="videoWrap">
+        <video id="video" autoplay muted playsinline hidden></video>
+        <canvas id="overlay" hidden></canvas>
+        <div class="placeholder" id="placeholder"><div class="cam">📷</div><strong>Kamera belum aktif</strong><div class="sub">Tekan “Mulai kamera” lalu izinkan akses kamera.</div></div>
+      </div>
+      <div class="controls">
+        <button class="primary" id="startBtn">▶ Mulai kamera</button>
+        <button class="secondary" id="switchBtn" disabled>↻ Ganti kamera</button>
+        <button class="secondary" id="stopBtn" disabled>■ Berhenti</button>
+      </div>
+      <div class="status"><span class="dot" id="dot"></span><span id="statusText">Memuat AI saat dibutuhkan.</span></div>
+      <div class="banner" id="hint">Model AI akan dimuat otomatis dari internet saat pertama kali digunakan. Tidak perlu mengunduh file model secara terpisah.</div>
+    </section>
+    <aside class="card">
+      <h2>Ringkasan deteksi</h2>
+      <div class="stats">
+        <div class="stat org"><div class="num" id="organicCount">0</div><div class="label">🌿 Organik</div></div>
+        <div class="stat anorg"><div class="num" id="inorganicCount">0</div><div class="label">♻ Anorganik</div></div>
+        <div class="stat not"><div class="num" id="nonCount">0</div><div class="label">🧍 Bukan sampah</div></div>
+        <div class="stat unknown"><div class="num" id="unknownCount">0</div><div class="label">❔ Tidak dikenali</div></div>
+      </div>
+      <div class="history-head"><h2 style="margin:0">Objek terbaru</h2><button class="text-btn" id="clearBtn">Reset hitungan</button></div>
+      <div class="history" id="history"><div class="empty">Belum ada objek yang terdeteksi.</div></div>
+      <p class="note">Hitungan bertambah saat objek baru terlihat, bukan setiap frame kamera. Angka tetap berupa perkiraan AI.</p>
+    </aside>
+  </div>
+  <section class="card" style="margin-top:16px">
+    <h2>ℹ️ Batasan yang perlu diketahui</h2>
+    <p style="margin:0;color:#526258;font-size:13px">Versi satu-file ini memakai model COCO-SSD bawaan TensorFlow.js yang mengenali objek umum (misalnya orang, botol, pisang, dan apel). Model ini <b>bukan model khusus sampah</b>, jadi tidak semua jenis sampah akan dikenali. Kategori organik/anorganik merupakan pemetaan berdasarkan nama objek yang dikenali, bukan penilaian material yang pasti. Objek yang tidak cocok dengan daftar ditampilkan sebagai “Tidak dikenali” agar tidak asal dikategorikan.</p>
+  </section>
+</main>
+<footer>Privasi: pemrosesan kamera dilakukan di browser setelah izin diberikan. Library dan model AI dimuat dari CDN sehingga koneksi internet diperlukan. Gunakan HTTPS atau localhost untuk akses kamera.</footer>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+<script>
+(() => {
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('overlay');
+  const ctx = canvas.getContext('2d');
+  const placeholder = document.getElementById('placeholder');
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const switchBtn = document.getElementById('switchBtn');
+  const statusText = document.getElementById('statusText');
+  const dot = document.getElementById('dot');
+  const historyEl = document.getElementById('history');
+  let model = null, stream = null, running = false, busy = false;
+  let facing = 'environment', timer = null;
+  const counts = {organic:0, inorganic:0, non:0, unknown:0};
+  const seen = new Map();
+  let rows = [];
+
+  // Mapping konservatif berdasarkan label yang memang dikenal COCO-SSD.
+  const organic = new Set(['banana','apple','orange','broccoli','carrot','pizza','donut','cake','sandwich','hot dog']);
+  const inorganic = new Set(['bottle','wine glass','cup','fork','knife','spoon','bowl','book','scissors','remote','cell phone','keyboard','laptop','mouse','tv','toaster','microwave','refrigerator','vase','clock','hair drier','toothbrush']);
+  const nonTrash = new Set(['person','bicycle','car','motorcycle','airplane','bus','train','truck','boat','traffic light','fire hydrant','stop sign','parking meter','bench','bird','cat','dog','horse','sheep','cow','elephant','bear','zebra','giraffe','backpack','umbrella','handbag','tie','suitcase','frisbee','skis','snowboard','sports ball','kite','baseball bat','baseball glove','skateboard','surfboard','tennis racket','chair','couch','potted plant','bed','dining table','toilet','monitor','oven','sink']);
+
+  function classify(label) {
+    if (organic.has(label)) return {key:'organic', text:'ORGANIK', color:'#16a34a'};
+    if (inorganic.has(label)) return {key:'inorganic', text:'ANORGANIK', color:'#2563eb'};
+    if (nonTrash.has(label)) return {key:'non', text:'BUKAN SAMPAH', color:'#d97706'};
+    return {key:'unknown', text:'TIDAK DIKENALI', color:'#94a3b8'};
+  }
+  function setStatus(text, live=false) {
+    statusText.textContent = text;
+    dot.classList.toggle('live', live);
+  }
+  function updateCounts() {
+    document.getElementById('organicCount').textContent = counts.organic;
+    document.getElementById('inorganicCount').textContent = counts.inorganic;
+    document.getElementById('nonCount').textContent = counts.non;
+    document.getElementById('unknownCount').textContent = counts.unknown;
+  }
+  function addHistory(label, category, confidence) {
+    const now = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    rows.unshift({label,category,confidence,now});
+    rows = rows.slice(0,30);
+    historyEl.replaceChildren();
+    rows.forEach(r => {
+      const line = document.createElement('div'); line.className='result-row';
+      const left = document.createElement('div');
+      const name = document.createElement('div'); name.className='object-name'; name.textContent=r.label;
+      const sub = document.createElement('div'); sub.className='sub'; sub.textContent=r.now+' · '+Math.round(r.confidence*100)+'%';
+      left.append(name,sub);
+      const tag = document.createElement('span'); tag.className='tag '+r.category.key; tag.textContent=r.category.text;
+      line.append(left,tag); historyEl.append(line);
+    });
+  }
+  async function loadModel() {
+    if (model) return model;
+    if (!window.tf || !window.cocoSsd) throw new Error('Library AI tidak berhasil dimuat. Periksa koneksi internet lalu muat ulang halaman.');
+    setStatus('Memuat model AI…');
+    model = await cocoSsd.load({base:'lite_mobilenet_v2'});
+    return model;
+  }
+  async function startCamera() {
+    try {
+      startBtn.disabled = true;
+      setStatus('Meminta izin kamera…');
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Browser tidak mendukung kamera di halaman ini. Buka melalui HTTPS atau localhost.');
+      }
+      const loaded = await loadModel();
+      stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:720}},audio:false});
+      video.srcObject = stream;
+      await new Promise((resolve,reject) => {
+        video.onloadedmetadata = () => video.play().then(resolve).catch(reject);
+        setTimeout(() => reject(new Error('Kamera terlalu lama merespons.')), 10000);
+      });
+      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+      video.hidden = false; canvas.hidden = false; placeholder.hidden = true;
+      running = true; stopBtn.disabled = false; switchBtn.disabled = false;
+      setStatus('Kamera aktif · AI sedang mendeteksi', true);
+      document.getElementById('hint').textContent = 'Arahkan kamera ke satu atau beberapa objek dengan pencahayaan cukup.';
+      detectLoop();
+    } catch (e) {
+      setStatus(e.message || 'Kamera gagal dijalankan.');
+      startBtn.disabled = false;
+    }
+  }
+  async function detectLoop() {
+    if (!running || busy) return;
+    busy = true;
+    try {
+      const predictions = await model.detect(video, 20, 0.55);
+      if (!running) return;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const now = Date.now();
+      const active = new Set();
+      for (const p of predictions) {
+        const [x,y,w,h] = p.bbox;
+        const c = classify(p.class);
+        ctx.strokeStyle = c.color; ctx.lineWidth = Math.max(2,canvas.width/400);
+        ctx.strokeRect(x,y,w,h);
+        const label = c.text+' · '+p.class+' '+Math.round(p.score*100)+'%';
+        ctx.font = `bold ${Math.max(13,canvas.width/65)}px system-ui`;
+        const tw = ctx.measureText(label).width;
+        const th = Math.max(22,canvas.width/45);
+        ctx.fillStyle = c.color;
+        ctx.fillRect(x,Math.max(0,y-th),Math.min(canvas.width-x,tw+12),th);
+        ctx.fillStyle = '#fff'; ctx.fillText(label,x+6,Math.max(th-6,y-6));
+        const key = p.class + ':' + Math.round(x/60) + ':' + Math.round(y/60);
+        active.add(key);
+        if (!seen.has(key) || now-seen.get(key)>5000) {
+          counts[c.key]++; updateCounts(); addHistory(p.class,c,p.score);
+          seen.set(key,now);
+        } else seen.set(key,now);
+      }
+      for (const [key,last] of seen) if (now-last>3000) seen.delete(key);
+    } catch (e) {
+      setStatus('Deteksi terganggu: '+e.message);
+    } finally {
+      busy = false;
+      if (running) timer = setTimeout(detectLoop, 180);
+    }
+  }
+  function stopCamera() {
+    running = false; if (timer) clearTimeout(timer);
+    if (stream) stream.getTracks().forEach(t=>t.stop());
+    stream = null; video.srcObject = null;
+    video.hidden = true; canvas.hidden = true; placeholder.hidden = false;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    startBtn.disabled = false; stopBtn.disabled = true; switchBtn.disabled = true;
+    setStatus('Kamera berhenti.');
+  }
+  startBtn.addEventListener('click', startCamera);
+  stopBtn.addEventListener('click', stopCamera);
+  switchBtn.addEventListener('click', async () => {
+    facing = facing === 'environment' ? 'user' : 'environment';
+    stopCamera();
+    await startCamera();
+  });
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    Object.keys(counts).forEach(k=>counts[k]=0);
+    seen.clear(); rows=[]; updateCounts();
+    historyEl.innerHTML='<div class="empty">Belum ada objek yang terdeteksi.</div>';
+  });
+  window.addEventListener('beforeunload', () => {
+    if (stream) stream.getTracks().forEach(t=>t.stop());
+  });
+})();
+</script>
+</body>
+</html>
