@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SortSmart AI — Deteksi Sampah</title>
+  <style>
+    :root {
+      --green: #21865b;
+      --green-light: #e8f7ef;
+      --blue: #2875c7;
+      --blue-light: #eaf3ff;
+      --orange: #b66a16;
+      --orange-light: #fff2df;
+      --ink: #1e2a25;
+      --muted: #64736b;
+      --line: #dce7e0;
+      --surface: #ffffff;
+      --bg: #f4f8f5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink); background: linear-gradient(160deg, #eef8f1 0%, #f7faf8 55%, #edf4fb 100%);
+      min-height: 100vh;
+    }
+    header { padding: 28px 18px 14px; text-align: center; }
+    .logo {
+      display: inline-grid; place-items: center; width: 54px; height: 54px; border-radius: 17px;
+      background: #d9f2e2; font-size: 28px; margin-bottom: 8px;
+    }
+    h1 { margin: 0; font-size: clamp(1.7rem, 5vw, 2.4rem); letter-spacing: -.04em; }
+    .subtitle { color: var(--muted); margin: 8px auto 0; max-width: 600px; line-height: 1.5; }
+    main { width: min(100% - 28px, 1000px); margin: 14px auto 40px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 18px; align-items: start; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 18px; box-shadow: 0 10px 28px #214b3010; }
+    .panel h2 { margin: 0 0 12px; font-size: 1.1rem; }
+    .camera-wrap { position: relative; overflow: hidden; border-radius: 16px; background: #18221c; aspect-ratio: 4/3; display: grid; place-items: center; }
+    .camera-stage { position:absolute; inset:0; overflow:hidden; }
+    video { width: 100%; height: 100%; object-fit: cover; display: none; transform: scale(var(--digital-zoom, 1)); transform-origin:center center; transition:transform .12s ease; }
+    #detectCanvas { display:none; }
+    .zoom-panel { display:flex; align-items:center; gap:12px; margin-top:14px; padding:12px 13px; border:1px solid var(--line); border-radius:14px; background:#fbfdfb; }
+    .zoom-icon { font-size:1.15rem; flex:0 0 auto; }
+    .zoom-slider { flex:1; min-width:80px; appearance:none; height:7px; border-radius:99px; background:linear-gradient(90deg,#21865b,#9bd8b5); outline:none; cursor:grab; touch-action:pan-y; }
+    .zoom-slider:active { cursor:grabbing; }
+    .zoom-slider::-webkit-slider-thumb { appearance:none; width:23px; height:23px; border-radius:50%; background:#21865b; border:3px solid white; box-shadow:0 1px 6px #173b2b55; }
+    .zoom-slider::-moz-range-thumb { width:18px; height:18px; border-radius:50%; background:#21865b; border:3px solid white; box-shadow:0 1px 6px #173b2b55; }
+    .zoom-value { min-width:42px; text-align:right; font-size:.85rem; font-weight:800; color:var(--green); font-variant-numeric:tabular-nums; }
+    .zoom-actions { display:flex; gap:7px; }
+    .zoom-actions button { padding:7px 10px; font-size:.85rem; }
+    #placeholder { color: #d9e6dd; text-align: center; padding: 24px; line-height: 1.5; }
+    #placeholder span { display: block; font-size: 42px; margin-bottom: 10px; }
+    .scan-line { display:none; position:absolute; left:0; right:0; height:2px; background:#5bf0a2; box-shadow:0 0 15px #5bf0a2; animation:scan 3s linear infinite; opacity:.8; pointer-events:none; }
+    @keyframes scan { 0%{top:5%} 100%{top:95%} }
+    .controls { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 13px; }
+    button { border: 0; border-radius: 12px; padding: 12px 15px; font-weight: 700; cursor: pointer; font-size: .94rem; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .primary { color: white; background: var(--green); }
+    .secondary { color: #24533b; background: #e8f4ec; }
+    .outline { color: #47564d; background: white; border: 1px solid var(--line); }
+    .status { margin: 12px 0 0; font-size: .88rem; color: var(--muted); line-height: 1.5; }
+    .status.error { color: #b42318; }
+    .result-card { border: 1px solid var(--line); border-radius: 16px; padding: 15px; background: #fbfdfb; }
+    .eyebrow { color: var(--muted); font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    #objectName { margin: 9px 0 15px; font-size: clamp(2.1rem, 8vw, 3.25rem); line-height: 1.05; font-weight: 900; letter-spacing: -.045em; overflow-wrap: anywhere; color: #173d2a; }
+    .category-pill { display:inline-flex; align-items:center; gap:7px; padding:8px 11px; border-radius:999px; font-weight:800; font-size:.88rem; }
+    .org { color: var(--green); background: var(--green-light); }
+    .hard { color: var(--blue); background: var(--blue-light); }
+    .soft { color: var(--orange); background: var(--orange-light); }
+    .unknown { color: #5f6870; background: #edf0f2; }
+    .confidence-row { display:flex; justify-content:space-between; gap:12px; margin-top:16px; font-size:.88rem; }
+    .bar { height:8px; border-radius:999px; background:#e8eee9; overflow:hidden; margin-top:7px; }
+    #confidenceBar { height:100%; width:0%; background:var(--green); transition:width .25s ease; }
+    .hint { margin: 13px 0 0; color: var(--muted); font-size: .88rem; line-height:1.5; }
+    .category-list { display:grid; gap:10px; margin-top:14px; }
+    .category-item { display:flex; gap:11px; align-items:flex-start; padding:12px; border-radius:14px; border:1px solid var(--line); }
+    .category-icon { font-size:22px; }
+    .category-item strong { display:block; margin-bottom:3px; }
+    .category-item p { margin:0; font-size:.83rem; color:var(--muted); line-height:1.45; }
+    .manual-detect { margin-top:15px; padding:13px; border:1px solid var(--line); border-radius:14px; background:#fbfdfb; }
+    .manual-detect label { display:block; font-weight:800; margin-bottom:8px; }
+    .manual-detect select { width:100%; padding:11px; border:1px solid var(--line); border-radius:10px; background:white; color:var(--ink); font:inherit; }
+    .manual-detect button { margin-top:9px; width:100%; }
+    .warning { margin-top:15px; padding:12px; border-radius:12px; background:#fff6e8; color:#79501d; font-size:.82rem; line-height:1.5; }
+    footer { text-align:center; color:var(--muted); font-size:.8rem; padding:0 18px 24px; }
+    .small { font-size:.8rem; color:var(--muted); line-height:1.5; }
+    @media (max-width: 760px) { .layout { grid-template-columns:1fr; } header { padding-top:20px; } .panel { padding:14px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true">♻️</div>
+    <h1>SortSmart AI</h1>
+    <p class="subtitle">Arahkan kamera ke sampah untuk mendapatkan prediksi jenis benda dan kategori pemilahannya.</p>
+  </header>
+
+  <main>
+    <div class="layout">
+      <section class="panel">
+        <h2>📷 Kamera Deteksi</h2>
+        <div class="camera-wrap">
+          <div class="camera-stage">
+            <div id="placeholder"><span>📦</span>Aktifkan kamera, lalu tunjukkan satu benda di depan kamera.</div>
+            <video id="video" autoplay playsinline muted></video>
+            <div id="scanLine" class="scan-line"></div>
+          </div>
+        </div>
+        <div class="zoom-panel" aria-label="Pengaturan zoom kamera">
+          <span class="zoom-icon" aria-hidden="true">➖</span>
+          <input id="zoomSlider" class="zoom-slider" type="range" min="1" max="4" step="0.1" value="1" aria-label="Atur zoom kamera">
+          <span class="zoom-icon" aria-hidden="true">➕</span>
+          <output id="zoomValue" class="zoom-value">1.0×</output>
+        </div>
+        <div class="zoom-actions">
+          <button class="outline" id="zoomOutBtn" type="button" aria-label="Zoom out">−</button>
+          <button class="outline" id="zoomResetBtn" type="button">Reset 1×</button>
+          <button class="outline" id="zoomInBtn" type="button" aria-label="Zoom in">+</button>
+        </div>
+        <div class="controls">
+          <button class="primary" id="startBtn">Aktifkan Kamera</button>
+          <button class="secondary" id="switchBtn" disabled>Ganti Kamera</button>
+          <button class="outline" id="stopBtn" disabled>Matikan Kamera</button>
+        </div>
+        <p id="status" class="status" role="status">Model AI akan dimuat saat halaman dibuka. Izinkan akses kamera saat diminta.</p>
+        <p class="small">Tips: gunakan slider zoom dengan menggeser lingkarannya. Letakkan satu benda di tengah dan pastikan pencahayaan cukup. Deteksi manusia diabaikan.</p>
+      </section>
+
+      <aside class="panel">
+        <h2>🔎 Hasil Deteksi</h2>
+        <div class="result-card" aria-live="polite">
+          <div class="eyebrow">Benda terdeteksi</div>
+          <h3 id="objectName">Belum ada deteksi</h3>
+          <span id="categoryPill" class="category-pill unknown">Menunggu kamera</span>
+          <div class="confidence-row"><span>Tingkat keyakinan model</span><strong id="confidenceText">—</strong></div>
+          <div class="bar"><div id="confidenceBar"></div></div>
+          <p id="resultHint" class="hint">Hasil akan muncul setelah kamera aktif dan model menemukan objek yang dikenali.</p>
+        </div>
+
+        <div class="manual-detect">
+          <label for="manualObject">Benda belum dikenali kamera?</label>
+          <select id="manualObject">
+            <option value="">Pilih benda secara manual…</option>
+            <option value="Kemasan plastik / ESD">Kemasan plastik / ESD</option>
+            <option value="Hardware / papan sirkuit (ESP32)">Hardware / papan sirkuit (ESP32)</option>
+            <option value="Kabel USB">Kabel USB</option>
+            <option value="iPad / tablet">iPad / tablet</option>
+            <option value="Mouse komputer">Mouse komputer</option>
+          </select>
+          <button class="secondary" id="manualDetectBtn" type="button">Tampilkan klasifikasi benda</button>
+          <p class="small">Pilihan manual digunakan sebagai bantuan jika model bawaan tidak mengenali bentuk benda.</p>
+        </div>
+
+        <div class="category-list">
+          <div class="category-item">
+            <div class="category-icon">🍃</div>
+            <div><strong>Sampah Organik</strong><p>Sisa makanan, kulit buah/sayur, ampas kopi/teh, daun, rumput, ranting.</p></div>
+          </div>
+          <div class="category-item">
+            <div class="category-icon">🧱</div>
+            <div><strong>Anorganik Keras</strong><p>Kaca, logam, besi, kaleng aluminium, ponsel, kabel, baterai, gunting, dan alat tulis berbahan campuran.</p></div>
+          </div>
+          <div class="category-item">
+            <div class="category-icon">🧴</div>
+            <div><strong>Anorganik Lunak</strong><p>Plastik, styrofoam, kemasan ringan, kertas, kardus, karet, ban, pulpen, spidol, stabilo, penggaris plastik, dan penghapus.</p></div>
+          </div>
+        </div>
+        <div class="warning"><strong>Catatan keselamatan:</strong> baterai dan limbah elektronik perlu dipisahkan sebagai limbah khusus. Jangan memasukkan pecahan kaca ke tong biasa.</div>
+        <p class="small">Contoh tambahan: kemasan plastik/ESD, papan sirkuit ESP32, kabel USB, iPad/tablet, dan mouse. Mouse, keyboard, serta ponsel dapat dikenali jika model COCO-SSD berhasil mengidentifikasinya. Kemasan, papan sirkuit, kabel, dan tablet tidak selalu dikenali otomatis oleh model bawaan; gunakan pilihan manual jika hasil kamera belum tepat.</p>
+      </aside>
+    </div>
+  </main>
+
+  <footer>SortSmart AI · Prototipe edukasi pemilahan sampah</footer>
+
+  <!-- Model COCO-SSD mengenali objek umum. Ia bukan model khusus sampah. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+  <script>
+    const video = document.getElementById('video');
+    const placeholder = document.getElementById('placeholder');
+    const statusEl = document.getElementById('status');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const switchBtn = document.getElementById('switchBtn');
+    const objectName = document.getElementById('objectName');
+    const categoryPill = document.getElementById('categoryPill');
+    const confidenceText = document.getElementById('confidenceText');
+    const confidenceBar = document.getElementById('confidenceBar');
+    const resultHint = document.getElementById('resultHint');
+    const scanLine = document.getElementById('scanLine');
+    const zoomSlider = document.getElementById('zoomSlider');
+    const zoomValue = document.getElementById('zoomValue');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const zoomResetBtn = document.getElementById('zoomResetBtn');
+
+    let model = null;
+    let stream = null;
+    let facingMode = 'environment';
+    let scanning = false;
+    let busy = false;
+    let lastLabel = '';
+    let lastCategory = '';
+    let currentZoom = 1;
+    let cameraZoomCapability = null;
+    let detectCanvas = document.createElement('canvas');
+    let detectContext = detectCanvas.getContext('2d', { willReadFrequently: true });
+
+    // Label COCO-SSD yang relevan dipetakan ke kategori perkiraan.
+    // Benda yang tidak dikenal tidak dipaksakan masuk ke kategori sampah.
+    const categoryMap = {
+      'banana': ['Sampah Organik', 'org', 'Kulit/potongan pisang atau buah; periksa benda secara langsung.'],
+      'apple': ['Sampah Organik', 'org', 'Buah atau sisa buah; periksa apakah benar sampah.'],
+      'orange': ['Sampah Organik', 'org', 'Buah atau kulit buah; periksa benda secara langsung.'],
+      'broccoli': ['Sampah Organik', 'org', 'Sayuran atau sisa sayuran.'],
+      'carrot': ['Sampah Organik', 'org', 'Sayuran atau sisa sayuran.'],
+      'sandwich': ['Sampah Organik', 'org', 'Sisa makanan; pastikan benda memang akan dibuang.'],
+      'pizza': ['Sampah Organik', 'org', 'Sisa makanan; pastikan benda memang akan dibuang.'],
+      'donut': ['Sampah Organik', 'org', 'Sisa makanan; pastikan benda memang akan dibuang.'],
+      'cake': ['Sampah Organik', 'org', 'Sisa makanan; pastikan benda memang akan dibuang.'],
+      'bottle': ['Anorganik Lunak', 'soft', 'Model mengenali botol, tetapi belum dapat memastikan bahannya. Periksa apakah plastik atau kaca.'],
+      'cup': ['Anorganik Lunak', 'soft', 'Model mengenali cangkir/gelas, tetapi bahan perlu diperiksa.'],
+      'wine glass': ['Anorganik Keras', 'hard', 'Kemungkinan gelas kaca; tangani dengan hati-hati.'],
+      'fork': ['Anorganik Keras', 'hard', 'Alat makan; periksa apakah berbahan logam atau plastik.'],
+      'knife': ['Anorganik Keras', 'hard', 'Alat makan; periksa bahan sebelum memilah.'],
+      'spoon': ['Anorganik Keras', 'hard', 'Alat makan; periksa apakah berbahan logam atau plastik.'],
+      'cell phone': ['Anorganik Keras', 'hard', 'Perangkat elektronik: kumpulkan sebagai limbah elektronik, bukan tong biasa.'],
+      'remote': ['Anorganik Keras', 'hard', 'Perangkat elektronik; periksa dan pisahkan baterainya dengan aman.'],
+      'keyboard': ['Anorganik Keras', 'hard', 'Perangkat elektronik: kumpulkan sebagai limbah elektronik.'],
+      'mouse': ['Anorganik Keras', 'hard', 'Mouse komputer termasuk perangkat elektronik. Jika rusak, kumpulkan sebagai limbah elektronik (e-waste), bukan sampah rumah tangga biasa.'],
+      'cell phone': ['Anorganik Keras', 'hard', 'Perangkat elektronik. Jika benda yang terlihat adalah tablet/iPad, kumpulkan sebagai limbah elektronik saat sudah rusak atau tidak digunakan.'],
+      'keyboard': ['Anorganik Keras', 'hard', 'Perangkat keras komputer (hardware). Jika rusak, kumpulkan sebagai limbah elektronik.'],
+      'book': ['Anorganik Lunak', 'soft', 'Buku berbahan kertas; pastikan tidak basah atau tercemar.'],
+      'paper': ['Anorganik Lunak', 'soft', 'Kertas dapat didaur ulang jika bersih dan kering.'],
+      'cardboard': ['Anorganik Lunak', 'soft', 'Kardus dapat didaur ulang jika bersih dan kering.'],
+      'teddy bear': ['Belum dapat dipastikan', 'unknown', 'Model mengenali boneka, tetapi tidak bisa memastikan apakah termasuk karet atau bahan lain.'],
+      'scissors': ['Anorganik Keras', 'hard', 'Gunting; periksa bahan dan pisahkan jika sudah tidak digunakan.'],
+      'toothbrush': ['Anorganik Lunak', 'soft', 'Sikat gigi biasanya terdiri dari campuran plastik dan nilon.'],
+      'hair drier': ['Anorganik Keras', 'hard', 'Peralatan elektronik; kumpulkan sebagai limbah elektronik.'],
+      'suitcase': ['Belum dapat dipastikan', 'unknown', 'Periksa bahan tas/koper sebelum menentukan kategori.'],
+      'tie': ['Anorganik Lunak', 'soft', 'Kain sintetis atau tekstil; gunakan kembali jika masih layak.'],
+      'vase': ['Belum dapat dipastikan', 'unknown', 'Periksa apakah terbuat dari kaca, keramik, atau plastik.']
+    };
+
+    // Label alat tulis yang dicari melalui pemeriksaan bentuk sederhana.
+    // COCO-SSD tidak memiliki kelas pencil/pen; deteksi ini hanya perkiraan visual.
+    const stationeryNames = {
+      pencil: 'Pensil',
+      pen: 'Pulpen',
+      marker: 'Spidol',
+      eraser: 'Penghapus',
+      ruler: 'Penggaris',
+      sharpener: 'Rautan',
+      highlighter: 'Stabilo'
+    };
+
+    async function applyZoom(value) {
+      currentZoom = Math.max(1, Math.min(4, Number(value) || 1));
+      zoomSlider.value = currentZoom;
+      zoomValue.textContent = currentZoom.toFixed(1) + '×';
+      video.style.setProperty('--digital-zoom', currentZoom);
+      if (stream) {
+        const track = stream.getVideoTracks()[0];
+        if (track && cameraZoomCapability) {
+          try {
+            const target = Math.min(cameraZoomCapability.max, Math.max(cameraZoomCapability.min, currentZoom));
+            await track.applyConstraints({ advanced: [{ zoom: target }] });
+          } catch (_) {
+            // Digital zoom tetap aktif jika zoom optik/perangkat tidak didukung.
+          }
+        }
+      }
+    }
+
+    zoomSlider.addEventListener('input', () => applyZoom(zoomSlider.value));
+    zoomInBtn.addEventListener('click', () => applyZoom(Math.min(4, currentZoom + 0.2)));
+    zoomOutBtn.addEventListener('click', () => applyZoom(Math.max(1, currentZoom - 0.2)));
+    zoomResetBtn.addEventListener('click', () => applyZoom(1));
+
+    function setStatus(message, isError = false) {
+      statusEl.textContent = message;
+      statusEl.className = isError ? 'status error' : 'status';
+    }
+
+    function showResult(label, score) {
+      const mapped = categoryMap[label];
+      const displayNames = {
+        'mouse': 'Mouse Komputer',
+        'cell phone': 'Perangkat Elektronik',
+        'keyboard': 'Hardware Komputer',
+        'bottle': 'Botol',
+        'book': 'Buku',
+        'scissors': 'Gunting'
+      };
+      objectName.textContent = displayNames[label] || label.replace(/\b\w/g, c => c.toUpperCase());
+      confidenceText.textContent = Math.round(score * 100) + '%';
+      confidenceBar.style.width = Math.round(score * 100) + '%';
+
+      if (!mapped) {
+        categoryPill.className = 'category-pill unknown';
+        categoryPill.textContent = 'Belum dapat dipastikan';
+        resultHint.textContent = 'Objek dikenali sebagai benda umum, tetapi kategori sampahnya belum tersedia dalam pemetaan. Periksa bahan benda atau gunakan model khusus sampah.';
+        return;
+      }
+      categoryPill.className = 'category-pill ' + mapped[1];
+      categoryPill.textContent = mapped[0];
+      resultHint.textContent = mapped[2];
+    }
+
+    function showNoDetection() {
+      objectName.textContent = 'Benda belum dikenali';
+      categoryPill.className = 'category-pill unknown';
+      categoryPill.textContent = 'Coba lagi';
+      confidenceText.textContent = '—';
+      confidenceBar.style.width = '0%';
+      resultHint.textContent = 'Dekatkan benda, gunakan latar yang sederhana, dan pastikan pencahayaan cukup.';
+    }
+
+    const manualObject = document.getElementById('manualObject');
+    document.getElementById('manualDetectBtn').addEventListener('click', () => {
+      const selected = manualObject.value;
+      if (!selected) {
+        resultHint.textContent = 'Pilih salah satu benda terlebih dahulu.';
+        return;
+      }
+      const classifications = {
+        'Kemasan plastik / ESD': ['Anorganik Lunak', 'soft', 'Kemasan plastik berlapis atau kantong ESD. Pisahkan sesuai fasilitas daur ulang setempat; kemasan berlapis dapat sulit didaur ulang.'],
+        'Hardware / papan sirkuit (ESP32)': ['Anorganik Keras', 'hard', 'Papan sirkuit dan komponen elektronik termasuk limbah elektronik (e-waste). Jangan dibuang ke sampah organik atau tempat sampah biasa.'],
+        'Kabel USB': ['Anorganik Keras', 'hard', 'Kabel mengandung logam dan plastik. Jika rusak atau tidak terpakai, kumpulkan sebagai limbah elektronik.'],
+        'iPad / tablet': ['Anorganik Keras', 'hard', 'Tablet termasuk perangkat elektronik (e-waste). Jangan dibongkar atau dibuang ke sampah biasa karena dapat mengandung baterai.'],
+        'Mouse komputer': ['Anorganik Keras', 'hard', 'Mouse komputer termasuk perangkat elektronik (e-waste) jika sudah rusak atau tidak digunakan.']
+      };
+      const item = classifications[selected];
+      objectName.textContent = selected;
+      objectName.style.fontSize = 'clamp(2.1rem, 8vw, 3.25rem)';
+      categoryPill.className = 'category-pill ' + item[1];
+      categoryPill.textContent = item[0];
+      confidenceText.textContent = 'Pilihan manual';
+      confidenceBar.style.width = '100%';
+      resultHint.textContent = item[2];
+    });
+
+    async function loadModel() {
+      if (model) return model;
+      if (!window.cocoSsd || !window.tf) {
+        throw new Error('Pustaka AI gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.');
+      }
+      setStatus('Memuat model AI… pastikan perangkat terhubung ke internet.');
+      await tf.ready();
+      model = await cocoSsd.load({ base: 'lite_mobilenet_v2' });
+      setStatus('Model AI siap. Tekan “Aktifkan Kamera” untuk mulai.');
+      return model;
+    }
+
+    async function startCamera() {
+      try {
+        startBtn.disabled = true;
+        await loadModel();
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error('Browser ini tidak mendukung akses kamera. Coba browser terbaru melalui HTTPS atau localhost.');
+        }
+        if (stream) stopCamera();
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: { facingMode: facingMode, width: { ideal: 640 }, height: { ideal: 480 } }
+        });
+        video.srcObject = stream;
+        const activeTrack = stream.getVideoTracks()[0];
+        const capabilities = activeTrack && activeTrack.getCapabilities ? activeTrack.getCapabilities() : {};
+        cameraZoomCapability = capabilities.zoom || null;
+        await applyZoom(currentZoom);
+        video.style.display = 'block';
+        placeholder.style.display = 'none';
+        scanLine.style.display = 'block';
+        await video.play();
+        scanning = true;
+        stopBtn.disabled = false;
+        switchBtn.disabled = false;
+        setStatus('Kamera aktif. Arahkan ke satu benda; prediksi diperbarui otomatis.');
+        requestAnimationFrame(detectLoop);
+      } catch (err) {
+        setStatus(err.message || 'Kamera tidak dapat diaktifkan. Periksa izin kamera pada browser.', true);
+        startBtn.disabled = false;
+      }
+    }
+
+    function stopCamera() {
+      scanning = false;
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+      video.srcObject = null;
+      cameraZoomCapability = null;
+      video.style.setProperty('--digital-zoom', 1);
+      video.style.display = 'none';
+      placeholder.style.display = 'block';
+      scanLine.style.display = 'none';
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      switchBtn.disabled = true;
+      setStatus('Kamera dimatikan. Tekan “Aktifkan Kamera” untuk memulai kembali.');
+    }
+
+    function guessStationeryByShape() {
+      // Heuristik sederhana: mencari dominasi tepi/warna pada bentuk panjang dan tipis
+      // di bagian tengah gambar. Ini bukan pengenal AI dan dapat salah mengenali benda lain.
+      if (!video.videoWidth || !video.videoHeight || !detectContext) return null;
+      const w = 160, h = 120;
+      detectCanvas.width = w;
+      detectCanvas.height = h;
+      detectContext.drawImage(video, 0, 0, w, h);
+      const image = detectContext.getImageData(0, 0, w, h).data;
+      let edges = 0, colored = 0, samples = 0;
+      for (let y = 18; y < h - 18; y += 2) {
+        for (let x = 18; x < w - 18; x += 2) {
+          const i = (y * w + x) * 4;
+          const r = image[i], g = image[i + 1], b = image[i + 2];
+          const gray = (r + g + b) / 3;
+          if (Math.max(r, g, b) - Math.min(r, g, b) > 45 && gray > 35 && gray < 235) colored++;
+          const right = ((y * w + (x + 2)) * 4);
+          const down = (((y + 2) * w + x) * 4);
+          const g1 = (image[right] + image[right + 1] + image[right + 2]) / 3;
+          const g2 = (image[down] + image[down + 1] + image[down + 2]) / 3;
+          if (Math.abs(gray - g1) > 35 || Math.abs(gray - g2) > 35) edges++;
+          samples++;
+        }
+      }
+      const edgeRatio = edges / Math.max(1, samples);
+      const colorRatio = colored / Math.max(1, samples);
+      // Hanya memberi kandidat bila ada detail/warna yang cukup; confidence sengaja rendah.
+      if (edgeRatio > 0.12 && colorRatio > 0.08) {
+        return { label: 'Alat tulis (perkiraan)', score: 0.35, heuristic: true };
+      }
+      return null;
+    }
+
+    async function detectLoop() {
+      if (!scanning || !model || busy) {
+        if (scanning) requestAnimationFrame(detectLoop);
+        return;
+      }
+      if (video.readyState >= 2) {
+        busy = true;
+        try {
+          const predictions = await model.detect(video);
+          // Pilih objek terbesar dengan confidence minimal 0.55 agar hasil kurang meyakinkan tidak dipaksakan.
+          // Kelas "person" dibuang sepenuhnya agar manusia tidak pernah menjadi hasil deteksi.
+          const candidate = predictions
+            .filter(p => p.class !== 'person' && p.score >= 0.55)
+            .sort((a, b) => (b.bbox[2] * b.bbox[3]) - (a.bbox[2] * a.bbox[3]))[0];
+          if (candidate) {
+            showResult(candidate.class, candidate.score);
+            if (candidate.class !== lastLabel || categoryMap[candidate.class]?.[0] !== lastCategory) {
+              lastLabel = candidate.class;
+              lastCategory = categoryMap[candidate.class]?.[0] || 'Belum dapat dipastikan';
+            }
+          } else {
+            const stationeryGuess = guessStationeryByShape();
+            if (stationeryGuess) {
+              objectName.textContent = stationeryGuess.label;
+              categoryPill.className = 'category-pill unknown';
+              categoryPill.textContent = 'Perkiraan alat tulis';
+              confidenceText.textContent = 'Rendah';
+              confidenceBar.style.width = '35%';
+              resultHint.textContent = 'Bentuk benda mungkin menyerupai pensil, pulpen, spidol, penghapus, penggaris, atau rautan. Model bawaan tidak dapat memastikan jenisnya. Periksa secara langsung.';
+            } else {
+              showNoDetection();
+            }
+          }
+        } catch (err) {
+          setStatus('Terjadi kendala saat mendeteksi. Coba muat ulang halaman.', true);
+        } finally {
+          busy = false;
+        }
+      }
+      if (scanning) setTimeout(() => requestAnimationFrame(detectLoop), 180);
+    }
+
+    startBtn.addEventListener('click', startCamera);
+    stopBtn.addEventListener('click', stopCamera);
+    switchBtn.addEventListener('click', async () => {
+      facingMode = facingMode === 'environment' ? 'user' : 'environment';
+      await startCamera();
+    });
+
+    loadModel().catch(err => setStatus(err.message || 'Model AI gagal dimuat.', true));
+    window.addEventListener('pagehide', () => {
+      scanning = false;
+      if (stream) stream.getTracks().forEach(track => track.stop());
+    });
+  </script>
+</body>
+</html>
