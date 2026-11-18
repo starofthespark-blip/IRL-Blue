@@ -5,11 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SortSmart AI — Deteksi & Pemilahan Sampah Pintar</title>
-  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -31,7 +29,6 @@
           },
           animation: {
             'scan': 'scan 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite',
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
           },
           keyframes: {
             scan: {
@@ -49,17 +46,16 @@
       color: #132a20;
     }
     .glass-panel {
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.95);
       box-shadow: 0 12px 32px -4px rgba(16, 65, 43, 0.08);
     }
     .bin-active {
       transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.14);
     }
-    /* Custom scrollbar ringan */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
@@ -67,25 +63,38 @@
 </head>
 <body class="min-h-screen antialiased selection:bg-emerald-200 selection:text-emerald-900">
 
-  <!-- Navbar / Header -->
-  <header class="sticky top-0 z-30 border-b border-emerald-900/5 bg-white/75 backdrop-blur-md">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 border-b border-emerald-900/10 bg-white/80 backdrop-blur-md">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
       <div class="flex items-center gap-3">
-        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-2xl text-white shadow-md shadow-emerald-500/25">
-          ♻️
+        <!-- Logo SVG Daur Ulang / Daun -->
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5" />
+            <path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12" />
+            <path d="m14 16-3 3 3 3" />
+            <path d="M8.293 13.596 7.196 9.5 3.1 10.598" />
+            <path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843" />
+            <path d="m13.378 9.633 4.096 1.098 1.097-4.096" />
+          </svg>
         </div>
         <div>
           <div class="flex items-center gap-2">
             <h1 class="font-display text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">SortSmart <span class="text-emerald-600">AI</span></h1>
-            <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-700">v2.0 Eco-Vision</span>
+            <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-800">Eco-Vision</span>
           </div>
-          <p class="hidden text-xs text-slate-500 sm:block">Asisten Pemilahan Sampah Pintar Berbasis Computer Vision</p>
+          <p class="hidden text-xs text-slate-500 sm:block">Sistem Pemilahan Sampah Pintar Berbasis Computer Vision</p>
         </div>
       </div>
 
-      <!-- Mini Eco-Points Badge -->
-      <div class="flex items-center gap-2.5 rounded-2xl border border-emerald-200/80 bg-emerald-50/90 px-3.5 py-2 shadow-sm">
-        <span class="text-lg">🌱</span>
+      <!-- Eco-Poin Sesi -->
+      <div class="flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50/90 px-3.5 py-2 shadow-sm">
+        <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+          </svg>
+        </div>
         <div class="text-right">
           <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Eco-Poin Sesi</div>
           <div class="font-display text-sm font-extrabold text-emerald-950"><span id="ecoPointsTop">0</span> Poin</div>
@@ -97,21 +106,21 @@
   <!-- Main Content -->
   <main class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:py-8">
     
-    <!-- Notifikasi Toast Inline (Pengganti alert) -->
+    <!-- Notifikasi Toast Inline -->
     <div id="toastBox" class="pointer-events-none fixed bottom-5 right-5 z-50 flex max-w-sm translate-y-4 items-center gap-3 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-medium text-white opacity-0 shadow-xl transition-all duration-300">
-      <span id="toastIcon" class="text-lg">✅</span>
-      <span id="toastMsg">Berhasil dicatat!</span>
+      <span id="toastDot" class="h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-400"></span>
+      <span id="toastMsg">Berhasil dicatat.</span>
     </div>
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start">
       
-      <!-- KOLOM KIRI: Kamera & Visualisasi AI (7 kolom di desktop) -->
+      <!-- KOLOM KIRI: Kamera & Visualisasi AI -->
       <div class="space-y-6 lg:col-span-7">
         <section class="glass-panel rounded-3xl p-4 sm:p-6">
           <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
               <h2 class="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
-                <span class="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
                 Pemindai Kamera & Gambar AI
               </h2>
               <p class="text-xs text-slate-500">Arahkan kamera ke benda sampah atau unggah foto untuk analisis otomatis</p>
@@ -126,8 +135,11 @@
           <div id="viewportContainer" class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-slate-900 shadow-inner ring-1 ring-slate-900/10">
             <!-- Placeholder Awal -->
             <div id="placeholder" class="flex h-full w-full flex-col items-center justify-center p-6 text-center text-slate-300">
-              <div class="mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-4xl backdrop-blur-sm">
-                📸
+              <div class="mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-emerald-400 backdrop-blur-sm">
+                <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                  <circle cx="12" cy="13" r="3" />
+                </svg>
               </div>
               <p class="font-display text-base font-bold text-white">Siap Memindai Sampah</p>
               <p class="mt-1 max-w-xs text-xs leading-relaxed text-slate-400">
@@ -148,7 +160,7 @@
             <div id="scanLine" class="pointer-events-none absolute left-0 right-0 hidden h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#34d399] animate-scan"></div>
 
             <!-- Badge Mode Aktif di Pojok Kiri Atas Video -->
-            <div id="liveBadge" class="hidden absolute left-3 top-3 items-center gap-1.5 rounded-full bg-slate-950/70 px-3 py-1 text-[11px] font-bold tracking-wide text-emerald-400 backdrop-blur-md">
+            <div id="liveBadge" class="hidden absolute left-3 top-3 items-center gap-1.5 rounded-full bg-slate-950/75 px-3 py-1 text-[11px] font-bold tracking-wide text-emerald-400 backdrop-blur-md">
               <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span id="liveBadgeText">LIVE DETEKSI</span>
             </div>
@@ -156,27 +168,49 @@
 
           <!-- Tombol Kontrol Utama -->
           <div class="mt-4 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
-            <button id="startBtn" class="col-span-2 flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-3 text-sm font-bold text-white shadow-md shadow-emerald-600/20 transition hover:from-emerald-700 hover:to-teal-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50">
-              <span>📷</span> Aktifkan Kamera
+            <button id="startBtn" type="button" class="col-span-2 flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-3 text-sm font-bold text-white shadow-md shadow-emerald-600/20 transition hover:from-emerald-700 hover:to-teal-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                <circle cx="12" cy="13" r="3" />
+              </svg>
+              <span>Aktifkan Kamera</span>
             </button>
-            <button id="switchBtn" disabled class="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-50 px-3.5 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-40">
-              <span>🔄</span> Balik Kamera
+            <button id="switchBtn" type="button" disabled class="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-50 px-3.5 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-40">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                <path d="M16 16h5v5" />
+              </svg>
+              <span>Balik Kamera</span>
             </button>
-            <button id="stopBtn" disabled class="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">
-              <span>⏹️</span> Hentikan
+            <button id="stopBtn" type="button" disabled class="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="6" y="6" width="12" height="12" rx="2" />
+              </svg>
+              <span>Hentikan</span>
             </button>
             
             <!-- Tombol Unggah Foto -->
-            <label for="imageUpload" class="col-span-2 flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-emerald-400 bg-emerald-50/50 px-4 py-2.5 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100/70 sm:col-span-1 sm:w-full">
-              <span>🖼️</span> Unggah Foto dari Galeri
+            <label for="imageUpload" class="col-span-2 flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-emerald-400 bg-emerald-50/60 px-4 py-2.5 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100/70 sm:col-span-1 sm:w-full">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>Unggah Foto dari Galeri</span>
               <input type="file" id="imageUpload" accept="image/*" class="hidden" />
             </label>
           </div>
 
           <!-- Status Bar -->
-          <div id="status" role="status" class="mt-3.5 flex items-start gap-2 rounded-xl bg-slate-100/80 px-3.5 py-2.5 text-xs leading-relaxed text-slate-600">
-            <span class="mt-0.5">ℹ️</span>
-            <span id="statusText">Menyiapkan mesin AI pengenalan objek. Izinkan akses kamera saat diminta oleh browser.</span>
+          <div id="status" role="status" class="mt-3.5 flex items-start gap-2.5 rounded-xl bg-slate-100/90 px-3.5 py-2.5 text-xs leading-relaxed text-slate-600">
+            <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span id="statusText">Kamera dapat langsung dinyalakan kapan saja. Izinkan akses kamera saat diminta oleh browser.</span>
           </div>
         </section>
 
@@ -184,7 +218,7 @@
         <section class="glass-panel rounded-3xl p-4 sm:p-6">
           <div class="mb-4 flex items-center justify-between">
             <div>
-              <h2 class="font-display text-base font-bold text-slate-900">📊 Statistik Pemilahan Sesi Ini (Eco-Tracker)</h2>
+              <h2 class="font-display text-base font-bold text-slate-900">Statistik Pemilahan Sesi Ini</h2>
               <p class="text-xs text-slate-500">Catat sampah yang berhasil Anda pilah untuk mengumpulkan Eco-Poin</p>
             </div>
             <button id="resetStatsBtn" type="button" class="rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-700">
@@ -194,18 +228,35 @@
 
           <div class="grid grid-cols-3 gap-3">
             <div class="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-3 text-center">
-              <div class="text-xl">🍃</div>
-              <div id="statOrganik" class="mt-1 font-display text-xl font-extrabold text-emerald-800">0</div>
+              <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                </svg>
+              </div>
+              <div id="statOrganik" class="mt-1.5 font-display text-xl font-extrabold text-emerald-800">0</div>
               <div class="text-[11px] font-semibold text-emerald-700">Organik</div>
             </div>
             <div class="rounded-2xl border border-amber-200 bg-amber-50/70 p-3 text-center">
-              <div class="text-xl">♻️</div>
-              <div id="statAnorganik" class="mt-1 font-display text-xl font-extrabold text-amber-800">0</div>
+              <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500 text-white">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5" />
+                  <path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12" />
+                  <path d="m14 16-3 3 3 3" />
+                </svg>
+              </div>
+              <div id="statAnorganik" class="mt-1.5 font-display text-xl font-extrabold text-amber-800">0</div>
               <div class="text-[11px] font-semibold text-amber-700">Anorganik</div>
             </div>
             <div class="rounded-2xl border border-rose-200 bg-rose-50/70 p-3 text-center">
-              <div class="text-xl">🔋</div>
-              <div id="statB3" class="mt-1 font-display text-xl font-extrabold text-rose-800">0</div>
+              <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-rose-600 text-white">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+              </div>
+              <div id="statB3" class="mt-1.5 font-display text-xl font-extrabold text-rose-800">0</div>
               <div class="text-[11px] font-semibold text-rose-700">B3 / E-Waste</div>
             </div>
           </div>
@@ -218,7 +269,7 @@
         </section>
       </div>
 
-      <!-- KOLOM KANAN: Hasil Analisis, Indikator Tong Sampah & Bantuan Manual (5 kolom di desktop) -->
+      <!-- KOLOM KANAN: Hasil Analisis, Indikator Tong Sampah & Bantuan Manual -->
       <aside class="space-y-6 lg:col-span-5">
         
         <!-- Kartu Hasil Utama -->
@@ -235,7 +286,8 @@
           <!-- Pill Kategori -->
           <div class="mt-2.5 flex flex-wrap items-center gap-2">
             <span id="categoryPill" class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3.5 py-1.5 text-xs font-extrabold text-slate-600">
-              <span>🔍</span> Belum terdeteksi
+              <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+              <span>Belum terdeteksi</span>
             </span>
             <span id="binLabelPill" class="hidden inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold">
               Tong Hijau
@@ -255,25 +307,48 @@
             <div class="grid grid-cols-4 gap-2 text-center">
               <!-- Tong Hijau: Organik -->
               <div id="bin-green" class="rounded-2xl border border-slate-200 bg-white/60 p-2 opacity-50 transition-all duration-300">
-                <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-lg text-white shadow-sm">🍃</div>
+                <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                  </svg>
+                </div>
                 <div class="mt-1.5 text-[11px] font-extrabold text-slate-800">Hijau</div>
                 <div class="text-[9px] font-medium text-slate-500">Organik</div>
               </div>
               <!-- Tong Kuning: Anorganik -->
               <div id="bin-yellow" class="rounded-2xl border border-slate-200 bg-white/60 p-2 opacity-50 transition-all duration-300">
-                <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400 text-lg text-slate-900 shadow-sm">🧴</div>
+                <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400 text-slate-900 shadow-sm">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5" />
+                    <path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12" />
+                    <path d="m14 16-3 3 3 3" />
+                  </svg>
+                </div>
                 <div class="mt-1.5 text-[11px] font-extrabold text-slate-800">Kuning</div>
                 <div class="text-[9px] font-medium text-slate-500">Anorganik</div>
               </div>
               <!-- Tong Merah: B3 / E-Waste -->
               <div id="bin-red" class="rounded-2xl border border-slate-200 bg-white/60 p-2 opacity-50 transition-all duration-300">
-                <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-rose-600 text-lg text-white shadow-sm">⚠️</div>
+                <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-rose-600 text-white shadow-sm">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
                 <div class="mt-1.5 text-[11px] font-extrabold text-slate-800">Merah</div>
                 <div class="text-[9px] font-medium text-slate-500">B3 / E-Waste</div>
               </div>
               <!-- Tong Abu-abu: Residu / Campuran -->
               <div id="bin-gray" class="rounded-2xl border border-slate-200 bg-white/60 p-2 opacity-50 transition-all duration-300">
-                <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-slate-600 text-lg text-white shadow-sm">🗑️</div>
+                <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-slate-600 text-white shadow-sm">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                  </svg>
+                </div>
                 <div class="mt-1.5 text-[11px] font-extrabold text-slate-800">Abu-abu</div>
                 <div class="text-[9px] font-medium text-slate-500">Residu</div>
               </div>
@@ -281,9 +356,14 @@
           </div>
 
           <!-- Kotak Saran Pengolahan / Daur Ulang -->
-          <div class="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-3.5">
+          <div class="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-3.5">
             <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-900">
-              <span>💡</span> Panduan Pemilahan & Daur Ulang
+              <svg class="h-4 w-4 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <span>Panduan Pemilahan & Daur Ulang</span>
             </div>
             <p id="resultHint" class="mt-1.5 text-xs leading-relaxed text-slate-700">
               Arahkan kamera ke sampah (seperti botol plastik, gelas, buah sisa, kertas, kaleng, atau perangkat elektronik) untuk melihat panduan pemilahannya.
@@ -292,17 +372,26 @@
 
           <!-- Tombol Catat ke Eco-Tracker -->
           <button id="logWasteBtn" type="button" disabled class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400">
-            <span>➕</span> Catat ke Riwayat Sampah (+10 Poin)
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <span>Catat ke Riwayat Sampah (+10 Poin)</span>
           </button>
         </section>
 
-        <!-- Bantuan Identifikasi Manual (Untuk Benda Kecil / Spesifik) -->
+        <!-- Bantuan Identifikasi Manual -->
         <section class="glass-panel rounded-3xl p-4 sm:p-6">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🔎</span>
+          <div class="flex items-center gap-2.5">
+            <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </div>
             <div>
               <h3 class="font-display text-sm font-bold text-slate-900">Identifikasi Bantuan Manual</h3>
-              <p class="text-[11px] text-slate-500">Untuk benda kecil/khusus yang sulit ditangkap kamera</p>
+              <p class="text-[11px] text-slate-500">Untuk benda kecil atau khusus yang sulit ditangkap kamera</p>
             </div>
           </div>
 
@@ -342,14 +431,19 @@
           </div>
         </section>
 
-        <!-- Panduan Cepat Kategori Sampah (Accordion Interaktif) -->
+        <!-- Panduan Cepat Kategori Sampah -->
         <section class="glass-panel rounded-3xl p-4 sm:p-6">
-          <h3 class="font-display text-sm font-bold text-slate-900 mb-3">📚 Panduan Singkat 4 Jenis Sampah</h3>
+          <h3 class="font-display text-sm font-bold text-slate-900 mb-3">Panduan Singkat 4 Jenis Sampah</h3>
           <div class="space-y-2 text-xs">
             <details class="group rounded-xl border border-emerald-100 bg-white/70 p-3 open:bg-emerald-50/40">
               <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-emerald-900">
-                <span>🍃 Sampah Organik (Tong Hijau)</span>
-                <span class="transition group-open:rotate-180">▾</span>
+                <span class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                  Sampah Organik (Tong Hijau)
+                </span>
+                <span class="transition group-open:rotate-180">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg>
+                </span>
               </summary>
               <p class="mt-2 leading-relaxed text-slate-600">
                 Sisa makanan, kulit buah, sayuran, ampas kopi/teh, daun kering. Dapat diolah menjadi pupuk kompos atau pakan maggot BSF.
@@ -358,8 +452,13 @@
 
             <details class="group rounded-xl border border-amber-100 bg-white/70 p-3 open:bg-amber-50/40">
               <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-amber-900">
-                <span>♻️ Sampah Anorganik (Tong Kuning)</span>
-                <span class="transition group-open:rotate-180">▾</span>
+                <span class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
+                  Sampah Anorganik (Tong Kuning)
+                </span>
+                <span class="transition group-open:rotate-180">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg>
+                </span>
               </summary>
               <p class="mt-2 leading-relaxed text-slate-600">
                 Botol plastik, kaleng aluminium, kardus bersih, kertas, gelas plastik. Pastikan dalam keadaan kering dan kosong agar bernilai di Bank Sampah.
@@ -368,8 +467,13 @@
 
             <details class="group rounded-xl border border-rose-100 bg-white/70 p-3 open:bg-rose-50/40">
               <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-rose-900">
-                <span>⚠️ Limbah B3 & Elektronik (Tong Merah)</span>
-                <span class="transition group-open:rotate-180">▾</span>
+                <span class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-rose-600"></span>
+                  Limbah B3 & Elektronik (Tong Merah)
+                </span>
+                <span class="transition group-open:rotate-180">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg>
+                </span>
               </summary>
               <p class="mt-2 leading-relaxed text-slate-600">
                 Baterai, ponsel rusak, kabel, charger, lampu, kemasan aerosol/obat nyamuk, pecahan kaca tajam. Harus dipisahkan agar tidak mencemari tanah.
@@ -378,8 +482,13 @@
 
             <details class="group rounded-xl border border-slate-200 bg-white/70 p-3 open:bg-slate-50/80">
               <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-slate-800">
-                <span>🗑️ Sampah Residu (Tong Abu-abu)</span>
-                <span class="transition group-open:rotate-180">▾</span>
+                <span class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-slate-500"></span>
+                  Sampah Residu (Tong Abu-abu)
+                </span>
+                <span class="transition group-open:rotate-180">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg>
+                </span>
               </summary>
               <p class="mt-2 leading-relaxed text-slate-600">
                 Tisu bekas, popok, puntung rokok, kemasan sachet kotor berminyak, atau styrofoam kotor yang sulit didaur ulang.
@@ -392,7 +501,7 @@
     </div>
   </main>
 
-  <footer class="border-t border-slate-200/60 bg-white/40 py-6 text-center text-xs text-slate-500">
+  <footer class="border-t border-slate-200/60 bg-white/50 py-6 text-center text-xs text-slate-500">
     <p class="font-medium text-slate-700">SortSmart AI — Edukasi Pemilahan Sampah Berbasis Kecerdasan Buatan</p>
     <p class="mt-1">Catatan: AI membantu mengenali bentuk benda umum; selalu periksa kebersihan dan bahan benda sebelum membuangnya.</p>
   </footer>
@@ -441,6 +550,7 @@
 
     // State Aplikasi
     let model = null;
+    let modelLoadingPromise = null;
     let stream = null;
     let facingMode = 'environment';
     let scanning = false;
@@ -450,18 +560,7 @@
     // Statistik Sesi
     let stats = { organik: 0, anorganik: 0, b3: 0, points: 0 };
 
-    /**
-     * Kamus Pemetaan COCO-SSD ke Bahasa Indonesia & Kategori Sampah
-     * Format:
-     * {
-     *   name: 'Nama Benda Bahasa Indonesia',
-     *   category: 'Kategori Sampah',
-     *   bin: 'green' | 'yellow' | 'red' | 'gray',
-     *   statType: 'organik' | 'anorganik' | 'b3',
-     *   boxColor: '#hex',
-     *   hint: 'Tips pengolahan / daur ulang'
-     * }
-     */
+    // Kamus Pemetaan COCO-SSD ke Bahasa Indonesia & Kategori Sampah
     const categoryMap = {
       // --- ORGANIK (Tong Hijau) ---
       'banana': {
@@ -526,7 +625,7 @@
         bin: 'green',
         statType: 'organik',
         boxColor: '#10b981',
-        hint: 'Sisa kue dapat terurai secara alami di komposter atau pakan ternak/maggot.'
+        hint: 'Sisa kue dapat terurai secara alami di komposter atau pakan ternak.'
       },
       'cake': {
         name: 'Kue / Makanan Manis',
@@ -576,7 +675,7 @@
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
-        hint: 'Kaca dapat didaur ulang tanpa batas. Jika retak/pecah, bungkus tebal dengan kertas koran dan beri label peringatan.'
+        hint: 'Kaca dapat didaur ulang tanpa batas. Jika retak atau pecah, bungkus tebal dengan kertas koran dan beri label peringatan.'
       },
       'bowl': {
         name: 'Mangkuk / Wadah Makan',
@@ -616,7 +715,7 @@
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
-        hint: 'Sikat gigi terbuat dari plastik campuran. Keringkan dan kumpulkan ke dropbox daur ulang plastik khusus.'
+        hint: 'Sikat gigi terbuat dari plastik campuran. Keringkan dan kumpulkan ke kotak daur ulang plastik khusus.'
       },
       'backpack': {
         name: 'Tas Ransel / Kain',
@@ -632,7 +731,7 @@
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
-        hint: 'Tas belanja kain/spunbond dapat dicuci dan dipakai berulang kali untuk mengurangi kresek.'
+        hint: 'Tas belanja kain dapat dicuci dan dipakai berulang kali untuk mengurangi kantong plastik.'
       },
       'suitcase': {
         name: 'Koper / Tas Besar',
@@ -648,7 +747,7 @@
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
-        hint: 'Pisahkan rangka besi/aluminium dari kain parasutnya jika ingin menyetorkannya ke pengepul rongsok.'
+        hint: 'Pisahkan rangka besi atau aluminium dari kain parasutnya jika ingin menyetorkannya ke pengepul.'
       },
       'sports ball': {
         name: 'Bola Karet / Plastik',
@@ -672,7 +771,7 @@
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
-        hint: 'Sampah berukuran besar (bulky waste) perlu disalurkan ke bank sampah induk atau layanan angkut khusus.'
+        hint: 'Sampah berukuran besar perlu disalurkan ke bank sampah induk atau layanan angkut khusus.'
       },
 
       // --- LIMBAH B3 & ELEKTRONIK / E-WASTE (Tong Merah) ---
@@ -682,7 +781,7 @@
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
-        hint: 'PERHATIAN: Mengandung baterai lithium & logam berat. Jangan dibuang ke tong biasa! Setor ke E-Waste Dropbox.'
+        hint: 'PERHATIAN: Mengandung baterai lithium dan logam berat. Jangan dibuang ke tong biasa; setor ke E-Waste Dropbox.'
       },
       'laptop': {
         name: 'Laptop / Komputer Jinjing',
@@ -698,7 +797,7 @@
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
-        hint: 'Jika mouse wireless, keluarkan baterainya terlebih dahulu lalu kumpulkan keduanya sebagai limbah elektronik.'
+        hint: 'Jika mouse nirkabel, keluarkan baterainya terlebih dahulu lalu kumpulkan keduanya sebagai limbah elektronik.'
       },
       'keyboard': {
         name: 'Keyboard Komputer',
@@ -714,7 +813,7 @@
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
-        hint: 'Wajib keluarkan baterai AA/AAA di dalamnya terlebih dahulu agar tidak bocor dan mencemari lingkungan.'
+        hint: 'Wajib keluarkan baterai di dalamnya terlebih dahulu agar tidak bocor dan mencemari lingkungan.'
       },
       'tv': {
         name: 'Layar Monitor / TV',
@@ -760,7 +859,7 @@
       }
     };
 
-    // Kamus Bantuan Manual (untuk benda kecil atau spesifik yang tidak ada di COCO-SSD)
+    // Kamus Bantuan Manual
     const manualMap = {
       'pensil': {
         name: 'Pensil Kayu',
@@ -817,7 +916,7 @@
         category: 'Sampah Residu (Multilayer)',
         bin: 'gray',
         statType: 'anorganik',
-        hint: 'Kemasan berlapis aluminium foil/plastik sulit didaur ulang. Bisa dijadikan isian ecobrick jika sudah dicuci bersih dan kering.'
+        hint: 'Kemasan berlapis aluminium foil dan plastik sulit didaur ulang. Bisa dijadikan isian ecobrick jika sudah dicuci bersih dan kering.'
       },
       'styrofoam': {
         name: 'Styrofoam / Wadah Makanan',
@@ -831,21 +930,21 @@
         category: 'Anorganik Keras (Logam)',
         bin: 'yellow',
         statType: 'anorganik',
-        hint: 'Bilas sisa makanan/minuman agar tidak mengundang semut, lalu pipihkan kaleng aluminium sebelum disetor ke Bank Sampah.'
+        hint: 'Bilas sisa makanan atau minuman agar tidak mengundang semut, lalu pipihkan kaleng aluminium sebelum disetor ke Bank Sampah.'
       },
       'pecahan-kaca': {
         name: 'Botol / Pecahan Kaca',
         category: 'Limbah B3 / Tajam',
         bin: 'red',
         statType: 'b3',
-        hint: 'KESELAMATAN: Bungkus pecahan kaca dengan kardus/koran tebal, rekatkan dengan lakban, dan tulis "AWAS KACA PECAH" agar tidak melukai petugas.'
+        hint: 'KESELAMATAN: Bungkus pecahan kaca dengan kardus atau koran tebal, rekatkan dengan lakban, dan beri tanda peringatan agar tidak melukai petugas.'
       },
       'baterai': {
         name: 'Baterai Bekas',
         category: 'Limbah B3 (Berbahaya)',
         bin: 'red',
         statType: 'b3',
-        hint: 'Baterai mengandung logam berat (merkuri, kadmium, lithium). Jangan dibakar atau dibuang ke tanah; kumpulkan di dropbox B3.'
+        hint: 'Baterai mengandung logam berat (merkuri, kadmium, lithium). Jangan dibakar atau dibuang ke tanah; kumpulkan di kotak limbah B3.'
       },
       'kabel': {
         name: 'Kabel / Charger Rusak',
@@ -859,7 +958,7 @@
         category: 'Limbah B3 (Berbahaya)',
         bin: 'red',
         statType: 'b3',
-        hint: 'Lampu neon/CFL mengandung uap merkuri. Simpan di dalam kotak kartonnya agar tidak pecah sebelum diserahkan ke titik limbah B3.'
+        hint: 'Lampu neon mengandung uap merkuri. Simpan di dalam kotak kartonnya agar tidak pecah sebelum diserahkan ke titik limbah B3.'
       },
       'sisa-makanan': {
         name: 'Sisa Makanan / Nasi / Sayur',
@@ -880,16 +979,21 @@
         category: 'Sampah Organik',
         bin: 'green',
         statType: 'organik',
-        hint: 'Daun kering merupakan unsur karbon (cokelat) yang sangat penting untuk menyeimbangkan kelembapan pupuk kompos.'
+        hint: 'Daun kering merupakan unsur karbon yang sangat penting untuk menyeimbangkan kelembapan pupuk kompos.'
       }
     };
 
     // Fungsi Helper Notifikasi Toast
     let toastTimer = null;
-    function showToast(message, icon = '✅') {
+    function showToast(message, type = 'success') {
       const toastBox = document.getElementById('toastBox');
+      const toastDot = document.getElementById('toastDot');
       document.getElementById('toastMsg').textContent = message;
-      document.getElementById('toastIcon').textContent = icon;
+      
+      toastDot.className = type === 'warn'
+        ? 'h-2.5 w-2.5 shrink-0 rounded-full bg-amber-400'
+        : 'h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-400';
+
       toastBox.classList.remove('opacity-0', 'translate-y-4');
       toastBox.classList.add('opacity-100', 'translate-y-0');
       
@@ -904,9 +1008,9 @@
       statusText.textContent = message;
       const statusBox = document.getElementById('status');
       if (isError) {
-        statusBox.className = 'mt-3.5 flex items-start gap-2 rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs leading-relaxed text-rose-700 border border-rose-200';
+        statusBox.className = 'mt-3.5 flex items-start gap-2.5 rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs leading-relaxed text-rose-700 border border-rose-200';
       } else {
-        statusBox.className = 'mt-3.5 flex items-start gap-2 rounded-xl bg-slate-100/80 px-3.5 py-2.5 text-xs leading-relaxed text-slate-600';
+        statusBox.className = 'mt-3.5 flex items-start gap-2.5 rounded-xl bg-slate-100/90 px-3.5 py-2.5 text-xs leading-relaxed text-slate-600';
       }
     }
 
@@ -933,7 +1037,6 @@
       currentDetectedItem = itemData;
       objectName.textContent = itemData.name;
       
-      // Atur Badge Akurasi
       if (isManual) {
         confidenceBadge.textContent = 'Pilihan Manual';
         confidenceBadge.className = 'rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-800';
@@ -945,29 +1048,32 @@
         confidenceBar.style.width = pct + '%';
       }
 
-      // Styling Pill Kategori & Warna Tong
       const binStyles = {
         green: {
           pillClass: 'bg-emerald-100 text-emerald-800',
-          binText: '🟢 Tong Hijau (Organik)',
+          dotClass: 'bg-emerald-600',
+          binText: 'Tong Hijau (Organik)',
           binPillClass: 'bg-emerald-600 text-white',
           barColor: 'bg-emerald-500'
         },
         yellow: {
           pillClass: 'bg-amber-100 text-amber-900',
-          binText: '🟡 Tong Kuning (Anorganik)',
+          dotClass: 'bg-amber-500',
+          binText: 'Tong Kuning (Anorganik)',
           binPillClass: 'bg-amber-400 text-slate-950',
           barColor: 'bg-amber-400'
         },
         red: {
           pillClass: 'bg-rose-100 text-rose-800',
-          binText: '🔴 Tong Merah (B3 / E-Waste)',
+          dotClass: 'bg-rose-600',
+          binText: 'Tong Merah (B3 / E-Waste)',
           binPillClass: 'bg-rose-600 text-white',
           barColor: 'bg-rose-600'
         },
         gray: {
           pillClass: 'bg-slate-200 text-slate-800',
-          binText: '⚪ Tong Abu-abu (Residu)',
+          dotClass: 'bg-slate-600',
+          binText: 'Tong Abu-abu (Residu)',
           binPillClass: 'bg-slate-600 text-white',
           barColor: 'bg-slate-500'
         }
@@ -975,7 +1081,7 @@
 
       const style = binStyles[itemData.bin] || binStyles.gray;
       categoryPill.className = `inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-extrabold ${style.pillClass}`;
-      categoryPill.innerHTML = `<span>♻️</span> ${itemData.category}`;
+      categoryPill.innerHTML = `<span class="h-2 w-2 rounded-full ${style.dotClass}"></span><span>${itemData.category}</span>`;
 
       binLabelPill.className = `inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold shadow-sm ${style.binPillClass}`;
       binLabelPill.textContent = style.binText;
@@ -992,7 +1098,7 @@
       currentDetectedItem = null;
       objectName.textContent = 'Mencari Objek...';
       categoryPill.className = 'inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3.5 py-1.5 text-xs font-extrabold text-slate-500';
-      categoryPill.innerHTML = '<span>🔍</span> Arahkan ke benda';
+      categoryPill.innerHTML = '<span class="h-2 w-2 rounded-full bg-slate-400"></span><span>Arahkan ke benda</span>';
       binLabelPill.classList.add('hidden');
       confidenceBadge.textContent = 'Akurasi: —';
       confidenceBadge.className = 'rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600';
@@ -1004,15 +1110,13 @@
 
     // Menggambar Bounding Box Real-time di Canvas Overlay
     function drawDetections(predictions, sourceWidth, sourceHeight, isImageMode = false) {
-      // Sesuaikan resolusi internal canvas dengan container
       const rect = overlayCanvas.getBoundingClientRect();
       overlayCanvas.width = rect.width;
       overlayCanvas.height = rect.height;
       ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
-      if (!predictions || predictions.length === 0) return;
+      if (!predictions || predictions.length === 0 || !sourceWidth || !sourceHeight) return;
 
-      // Hitung rasio skala object-cover (video) atau object-contain (gambar)
       const scaleX = overlayCanvas.width / sourceWidth;
       const scaleY = overlayCanvas.height / sourceHeight;
       const scale = isImageMode ? Math.min(scaleX, scaleY) : Math.max(scaleX, scaleY);
@@ -1032,14 +1136,16 @@
         const displayName = mapped ? mapped.name : pred.class;
         const labelText = `${displayName} (${Math.round(pred.score * 100)}%)`;
 
-        // Kotak Deteksi dengan Sudut Membulat
         ctx.strokeStyle = color;
         ctx.lineWidth = idx === 0 ? 3.5 : 2;
         ctx.beginPath();
-        ctx.roundRect(x, y, w, h, 10);
+        if (ctx.roundRect) {
+          ctx.roundRect(x, y, w, h, 10);
+        } else {
+          ctx.rect(x, y, w, h);
+        }
         ctx.stroke();
 
-        // Latar Belakang Label
         ctx.font = 'bold 12px "Inter", sans-serif';
         const textMetrics = ctx.measureText(labelText);
         const textW = textMetrics.width + 14;
@@ -1048,58 +1154,118 @@
 
         ctx.fillStyle = color;
         ctx.beginPath();
-        ctx.roundRect(x, labelY, textW, textH, 6);
+        if (ctx.roundRect) {
+          ctx.roundRect(x, labelY, textW, textH, 6);
+        } else {
+          ctx.rect(x, labelY, textW, textH);
+        }
         ctx.fill();
 
-        // Teks Label
         ctx.fillStyle = '#ffffff';
         ctx.fillText(labelText, x + 7, labelY + 16);
       });
     }
 
-    // Muat Model AI (Prioritas mobilenet_v2 untuk akurasi lebih tinggi, fallback ke lite_mobilenet_v2)
-    async function loadModel() {
-      if (model) return model;
-      if (!window.cocoSsd || !window.tf) {
-        throw new Error('Pustaka TensorFlow gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.');
-      }
-      setStatus('Mengunduh model AI pengenalan objek (MobileNet v2)...');
-      await tf.ready();
-      try {
-        model = await cocoSsd.load({ base: 'mobilenet_v2' });
-      } catch (e) {
-        model = await cocoSsd.load({ base: 'lite_mobilenet_v2' });
-      }
-      modelBadge.className = 'inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800';
-      modelBadge.innerHTML = '<span class="h-2 w-2 rounded-full bg-emerald-500"></span> Model AI Siap';
-      setStatus('Model AI siap digunakan. Tekan "Aktifkan Kamera" atau unggah foto sampah.');
-      return model;
+    // Muat Model AI secara paralel & non-blocking terhadap kamera
+    function loadModel() {
+      if (model) return Promise.resolve(model);
+      if (modelLoadingPromise) return modelLoadingPromise;
+
+      modelLoadingPromise = (async () => {
+        if (!window.cocoSsd || !window.tf) {
+          throw new Error('Pustaka TensorFlow gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.');
+        }
+
+        modelBadge.className = 'inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800';
+        modelBadge.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-amber-500 animate-ping"></span> Memuat Model AI...';
+
+        await tf.ready();
+        try {
+          // Gunakan lite_mobilenet_v2 terlebih dahulu agar cepat dimuat, atau mobilenet_v2 sebagai fallback
+          model = await cocoSsd.load({ base: 'lite_mobilenet_v2' });
+        } catch (e) {
+          model = await cocoSsd.load({ base: 'mobilenet_v2' });
+        }
+
+        modelBadge.className = 'inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800';
+        modelBadge.innerHTML = '<span class="h-2 w-2 rounded-full bg-emerald-500"></span> Model AI Siap';
+
+        if (scanning) {
+          setStatus('Kamera aktif dan model AI siap. Memindai objek secara otomatis...');
+        } else {
+          setStatus('Model AI siap digunakan. Tekan "Aktifkan Kamera" atau unggah foto sampah.');
+        }
+        return model;
+      })().catch(err => {
+        modelLoadingPromise = null;
+        modelBadge.className = 'inline-flex items-center gap-1.5 rounded-full bg-rose-100 px-3 py-1 text-xs font-bold text-rose-800';
+        modelBadge.innerHTML = '<span class="h-2 w-2 rounded-full bg-rose-500"></span> Model AI Gagal';
+        setStatus(err.message || 'Gagal memuat model AI. Periksa koneksi internet Anda.', true);
+        throw err;
+      });
+
+      return modelLoadingPromise;
     }
 
-    // Jalankan Kamera Real-Time
+    // Mendapatkan stream kamera dengan fallback otomatis untuk perangkat mobile maupun webcam laptop
+    async function requestCameraStream(preferredFacingMode) {
+      const constraintsList = [
+        {
+          audio: false,
+          video: {
+            facingMode: { ideal: preferredFacingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        },
+        {
+          audio: false,
+          video: { facingMode: preferredFacingMode }
+        },
+        {
+          audio: false,
+          video: true
+        }
+      ];
+
+      let lastError = null;
+      for (const constraints of constraintsList) {
+        try {
+          return await navigator.mediaDevices.getUserMedia(constraints);
+        } catch (err) {
+          lastError = err;
+          // Jika pengguna menolak izin kamera secara eksplisit, langsung hentikan percobaan fallback
+          if (err && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
+            throw err;
+          }
+        }
+      }
+      throw lastError || new Error('Perangkat kamera tidak ditemukan atau sedang digunakan aplikasi lain.');
+    }
+
+    // Jalankan Kamera Real-Time (Terpisah dari pemuatan model AI agar langsung terbuka!)
     async function startCamera() {
       try {
         startBtn.disabled = true;
-        await loadModel();
+        setStatus('Meminta izin akses kamera...');
 
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
           throw new Error('Browser tidak mendukung akses kamera. Pastikan membuka situs melalui HTTPS atau localhost.');
         }
 
-        if (stream) stopCamera();
+        if (stream) {
+          stopCamera(false);
+        }
+
+        // Mulai pemuatan model AI di latar belakang tanpa memblokir kamera
+        loadModel().catch(() => {});
+
+        // Buka stream kamera segera
+        stream = await requestCameraStream(facingMode);
 
         // Sembunyikan mode upload gambar jika aktif
         uploadedImage.classList.add('hidden');
         ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: false,
-          video: {
-            facingMode: facingMode,
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }
-        });
 
         video.srcObject = stream;
         video.classList.remove('hidden');
@@ -1113,15 +1279,31 @@
         scanning = true;
         stopBtn.disabled = false;
         switchBtn.disabled = false;
-        setStatus('Kamera aktif. AI sedang memindai objek secara otomatis...');
+
+        if (model) {
+          setStatus('Kamera aktif. AI sedang memindai objek secara otomatis...');
+        } else {
+          setStatus('Kamera aktif. Menunggu model AI selesai dimuat untuk mulai mendeteksi...');
+        }
+
         requestAnimationFrame(detectLoop);
       } catch (err) {
-        setStatus(err.message || 'Gagal mengakses kamera. Pastikan izin kamera telah diberikan di browser.', true);
+        let friendlyMsg = 'Gagal membuka kamera. Pastikan izin kamera telah diberikan pada pengaturan browser.';
+        if (err && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
+          friendlyMsg = 'Izin kamera ditolak oleh pengguna atau browser. Izinkan akses kamera pada bilah alamat browser lalu coba lagi.';
+        } else if (err && (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError')) {
+          friendlyMsg = 'Perangkat kamera tidak ditemukan pada komputer atau ponsel Anda.';
+        } else if (err && (err.name === 'NotReadableError' || err.name === 'TrackStartError')) {
+          friendlyMsg = 'Kamera sedang digunakan oleh aplikasi lain. Tutup aplikasi tersebut lalu coba lagi.';
+        } else if (err && err.message) {
+          friendlyMsg = err.message;
+        }
+        setStatus(friendlyMsg, true);
         startBtn.disabled = false;
       }
     }
 
-    function stopCamera() {
+    function stopCamera(updateStatusText = true) {
       scanning = false;
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
@@ -1140,10 +1322,12 @@
       startBtn.disabled = false;
       stopBtn.disabled = true;
       switchBtn.disabled = true;
-      setStatus('Kamera dimatikan. Anda dapat menyalakannya kembali atau mengunggah foto.');
+      if (updateStatusText) {
+        setStatus('Kamera dimatikan. Anda dapat menyalakannya kembali atau mengunggah foto.');
+      }
     }
 
-    // Filter prediksi yang valid (hindari benda tajam/senjata atau manusia agar fokus ke benda sampah)
+    // Filter prediksi yang valid
     function filterValidPredictions(predictions) {
       const ignoredClasses = ['person', 'knife', 'dagger', 'sword', 'scissors'];
       return predictions
@@ -1153,12 +1337,15 @@
 
     // Loop Deteksi Real-Time Kamera
     async function detectLoop() {
-      if (!scanning || !model || busy) {
-        if (scanning) requestAnimationFrame(detectLoop);
+      if (!scanning) return;
+
+      // Jika model belum siap, tunggu frame berikutnya sambil tetap menampilkan video kamera
+      if (!model || busy) {
+        requestAnimationFrame(detectLoop);
         return;
       }
 
-      if (video.readyState >= 2) {
+      if (video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0) {
         busy = true;
         try {
           const rawPredictions = await model.detect(video);
@@ -1173,13 +1360,12 @@
             if (mapped) {
               updateResultUI(mapped, topObj.score, false);
             } else {
-              // Objek terdeteksi COCO-SSD tapi belum ada di kamus spesifik
               updateResultUI({
                 name: `Benda Terdeteksi (${topObj.class})`,
                 category: 'Perlu Pemeriksaan Bahan',
                 bin: 'gray',
                 statType: 'anorganik',
-                hint: 'AI mengenali objek ini, namun bahannya perlu dipastikan. Jika berbahan plastik/kertas bersih masukkan Tong Kuning; jika sisa makanan masuk Tong Hijau.'
+                hint: 'AI mengenali objek ini, namun bahannya perlu dipastikan. Jika berbahan plastik atau kertas bersih masukkan Tong Kuning; jika sisa makanan masuk Tong Hijau.'
               }, topObj.score, false);
             }
           } else {
@@ -1203,7 +1389,8 @@
       if (!file) return;
 
       try {
-        if (scanning) stopCamera();
+        if (scanning) stopCamera(false);
+        setStatus('Memuat foto dan menyiapkan model AI...');
         await loadModel();
 
         const reader = new FileReader();
@@ -1246,7 +1433,7 @@
         };
         reader.readAsDataURL(file);
       } catch (err) {
-        setStatus('Gagal memproses gambar yang diunggah.', true);
+        setStatus('Gagal memproses gambar yang diunggah. Pastikan koneksi internet aktif untuk memuat model AI.', true);
       }
     });
 
@@ -1254,12 +1441,12 @@
     manualBtn.addEventListener('click', () => {
       const selectedKey = manualObject.value;
       if (!selectedKey || !manualMap[selectedKey]) {
-        showToast('Pilih salah satu jenis benda terlebih dahulu', '⚠️');
+        showToast('Pilih salah satu jenis benda terlebih dahulu.', 'warn');
         return;
       }
       const itemData = manualMap[selectedKey];
       updateResultUI(itemData, null, true);
-      showToast(`Menampilkan panduan untuk ${itemData.name}`, '💡');
+      showToast(`Menampilkan panduan untuk ${itemData.name}.`, 'success');
     });
 
     // Event Listener Catat ke Eco-Tracker
@@ -1276,7 +1463,6 @@
       statAnorganik.textContent = stats.anorganik;
       statB3.textContent = stats.b3;
 
-      // Tambahkan ke daftar riwayat singkat
       historyContainer.classList.remove('hidden');
       const li = document.createElement('li');
       li.className = 'flex items-center justify-between rounded-lg bg-white/80 px-2.5 py-1.5 border border-slate-100';
@@ -1295,7 +1481,7 @@
         historyList.removeChild(historyList.lastChild);
       }
 
-      showToast(`+10 Eco-Poin! ${currentDetectedItem.name} dicatat.`, '🌱');
+      showToast(`+10 Eco-Poin! ${currentDetectedItem.name} dicatat.`, 'success');
     });
 
     // Reset Statistik
@@ -1307,12 +1493,12 @@
       statB3.textContent = '0';
       historyList.innerHTML = '';
       historyContainer.classList.add('hidden');
-      showToast('Statistik sesi telah direset', '🔄');
+      showToast('Statistik sesi telah direset.', 'success');
     });
 
     // Tombol Kontrol Kamera
     startBtn.addEventListener('click', startCamera);
-    stopBtn.addEventListener('click', stopCamera);
+    stopBtn.addEventListener('click', () => stopCamera(true));
     switchBtn.addEventListener('click', async () => {
       facingMode = facingMode === 'environment' ? 'user' : 'environment';
       await startCamera();
@@ -1324,13 +1510,9 @@
       if (stream) stream.getTracks().forEach(track => track.stop());
     });
 
-    // Muat model AI otomatis saat halaman dibuka
+    // Muat model AI di latar belakang saat halaman dibuka
     window.addEventListener('load', () => {
-      loadModel().catch(err => {
-        modelBadge.className = 'inline-flex items-center gap-1.5 rounded-full bg-rose-100 px-3 py-1 text-xs font-bold text-rose-800';
-        modelBadge.textContent = '⚠️ Model Gagal Dimuat';
-        setStatus(err.message, true);
-      });
+      loadModel().catch(() => {});
     });
   </script>
 </body>
