@@ -266,7 +266,7 @@
                 </svg>
               </div>
               <div id="statB3" class="mt-1.5 font-display text-xl font-extrabold text-rose-800">0</div>
-              <div class="text-[11px] font-semibold text-rose-700">B3 / E-Waste</div>
+              <div class="text-[11px] font-semibold text-rose-700">Anorganik</div>
             </div>
           </div>
 
@@ -338,7 +338,7 @@
                 <div class="text-[9px] font-medium text-slate-500">Anorganik</div>
               </div>
               <!-- Tong Merah: B3 / E-Waste -->
-              <div id="bin-red" class="rounded-2xl border border-slate-200 bg-white/60 p-2 opacity-50 transition-all duration-300">
+              <div id="bin-red" class="hidden rounded-2xl border border-slate-200 bg-white/60 p-2 opacity-50 transition-all duration-300">
                 <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-rose-600 text-white shadow-sm">
                   <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
@@ -350,7 +350,7 @@
                 <div class="text-[9px] font-medium text-slate-500">B3 / E-Waste</div>
               </div>
               <!-- Tong Abu-abu: Residu / Campuran -->
-              <div id="bin-gray" class="rounded-2xl border border-slate-200 bg-white/60 p-2 opacity-50 transition-all duration-300">
+              <div id="bin-gray" class="hidden rounded-2xl border border-slate-200 bg-white/60 p-2 opacity-50 transition-all duration-300">
                 <div class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-slate-600 text-white shadow-sm">
                   <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M3 6h18" />
@@ -442,7 +442,7 @@
 
         <!-- Panduan Cepat Kategori Sampah -->
         <section class="glass-panel rounded-3xl p-4 sm:p-6">
-          <h3 class="font-display text-sm font-bold text-slate-900 mb-3">Panduan Singkat 4 Jenis Sampah</h3>
+          <h3 class="font-display text-sm font-bold text-slate-900 mb-3">Panduan Singkat Kategori Sampah</h3>
           <div class="space-y-2 text-xs">
             <details class="group rounded-xl border border-emerald-100 bg-white/70 p-3 open:bg-emerald-50/40">
               <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-emerald-900">
@@ -478,7 +478,7 @@
               <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-rose-900">
                 <span class="flex items-center gap-2">
                   <span class="h-2.5 w-2.5 rounded-full bg-rose-600"></span>
-                  Limbah B3 & Elektronik (Tong Merah)
+                  Anorganik (Tong Kuning)
                 </span>
                 <span class="transition group-open:rotate-180">
                   <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg>
@@ -493,7 +493,7 @@
               <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-slate-800">
                 <span class="flex items-center gap-2">
                   <span class="h-2.5 w-2.5 rounded-full bg-slate-500"></span>
-                  Sampah Residu (Tong Abu-abu)
+                  Anorganik (Tong Kuning)
                 </span>
                 <span class="transition group-open:rotate-180">
                   <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg>
@@ -581,7 +581,7 @@
       // --- PERANGKAT ELEKTRONIK & GADGET (Tong Merah / E-Waste) ---
       'cell phone': {
         name: 'Ponsel / Smartphone (HP)',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
@@ -589,7 +589,7 @@
       },
       'laptop': {
         name: 'Laptop / Komputer Jinjing',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
@@ -597,7 +597,7 @@
       },
       'tablet': {
         name: 'Tablet / iPad',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
@@ -605,7 +605,7 @@
       },
       'mouse': {
         name: 'Mouse Komputer',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
@@ -613,7 +613,7 @@
       },
       'keyboard': {
         name: 'Keyboard Komputer',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
@@ -621,7 +621,7 @@
       },
       'remote': {
         name: 'Remote Control',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         boxColor: '#e11d48',
@@ -631,7 +631,7 @@
       // --- ALAT TULIS & KACAMATA (Tong Kuning / Abu-abu) ---
       'eyeglasses': {
         name: 'Kacamata',
-        category: 'Anorganik Keras / Campuran',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
@@ -639,7 +639,7 @@
       },
       'book': {
         name: 'Buku / Buku Catatan / Kertas',
-        category: 'Anorganik (Kertas)',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
@@ -649,7 +649,7 @@
       // --- BOTOL MINUM & WADAH (Tong Kuning) ---
       'bottle': {
         name: 'Botol Minum / Tumbler / Botol Plastik',
-        category: 'Anorganik Daur Ulang',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
@@ -657,7 +657,7 @@
       },
       'cup': {
         name: 'Gelas / Tumbler Minum',
-        category: 'Anorganik Lunak',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
@@ -665,7 +665,7 @@
       },
       'wine glass': {
         name: 'Gelas Kaca',
-        category: 'Anorganik Keras (Kaca)',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
@@ -673,7 +673,7 @@
       },
       'bowl': {
         name: 'Mangkuk / Wadah',
-        category: 'Anorganik Keras',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         boxColor: '#f59e0b',
@@ -681,100 +681,100 @@
       },
 
       // --- ORGANIK (Tong Hijau) ---
-      'banana': { name: 'Pisang / Kulit Pisang', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Kulit pisang sangat baik untuk kompos.' },
-      'apple': { name: 'Apel / Buah', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa buah mudah terurai secara alami.' },
-      'orange': { name: 'Jeruk / Kulit Jeruk', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Kulit jeruk bisa dijadikan eco-enzyme.' },
-      'broccoli': { name: 'Sayuran', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Potongan sayur masuk ke komposter.' },
-      'carrot': { name: 'Wortel / Sayur', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa sayuran dapur mudah membusuk.' },
-      'sandwich': { name: 'Roti / Sisa Makanan', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa makanan masuk ke tong hijau.' },
-      'pizza': { name: 'Sisa Makanan', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa makanan organik basah.' },
-      'donut': { name: 'Kue / Makanan', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa kue dapat diurai.' },
-      'cake': { name: 'Kue Sisa', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Pisahkan hiasan plastik sebelum dikomposkan.' },
-      'potted plant': { name: 'Tanaman / Daun', category: 'Sampah Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Daun kering dan ranting masuk tong hijau.' }
+      'banana': { name: 'Pisang / Kulit Pisang', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Kulit pisang sangat baik untuk kompos.' },
+      'apple': { name: 'Apel / Buah', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa buah mudah terurai secara alami.' },
+      'orange': { name: 'Jeruk / Kulit Jeruk', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Kulit jeruk bisa dijadikan eco-enzyme.' },
+      'broccoli': { name: 'Sayuran', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Potongan sayur masuk ke komposter.' },
+      'carrot': { name: 'Wortel / Sayur', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa sayuran dapur mudah membusuk.' },
+      'sandwich': { name: 'Roti / Sisa Makanan', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa makanan masuk ke tong hijau.' },
+      'pizza': { name: 'Sisa Makanan', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa makanan organik basah.' },
+      'donut': { name: 'Kue / Makanan', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Sisa kue dapat diurai.' },
+      'cake': { name: 'Kue Sisa', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Pisahkan hiasan plastik sebelum dikomposkan.' },
+      'potted plant': { name: 'Tanaman / Daun', category: 'Organik', bin: 'green', statType: 'organik', boxColor: '#10b981', hint: 'Daun kering dan ranting masuk tong hijau.' }
     };
 
     // Kamus Bantuan Manual (mencakup Pulpen, Pensil, Kacamata, Laptop, Tablet, Botol, HP, dll)
     const manualMap = {
       'pensil': {
         name: 'Pensil Kayu',
-        category: 'Residu / Campuran',
+        category: 'Anorganik',
         bin: 'gray',
         statType: 'anorganik',
         hint: 'Pensil terdiri dari kayu dan grafit. Rautan kayunya dapat masuk ke kompos.'
       },
       'pulpen': {
         name: 'Pulpen / Bolpoin',
-        category: 'Anorganik Plastik',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         hint: 'Terbuat dari plastik keras dan tabung tinta. Kumpulkan ke kotak daur ulang alat tulis.'
       },
       'kacamata': {
         name: 'Kacamata',
-        category: 'Anorganik Keras',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         hint: 'Bingkai kacamata dapat disumbangkan jika masih layak pakai, atau dipilah sesuai bahan.'
       },
       'laptop': {
         name: 'Laptop / Komputer',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         hint: 'Mengandung baterai dan komponen berharga. Serahkan ke pengelola e-waste resmi.'
       },
       'tablet': {
         name: 'Tablet / iPad',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         hint: 'Gadget dan tablet wajib dikelola melalui drop box limbah elektronik khusus.'
       },
       'botol-minum': {
         name: 'Botol Minum / Tumbler',
-        category: 'Anorganik Daur Ulang',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         hint: 'Tumbler atau botol plastik bersih dapat disetorkan ke Bank Sampah.'
       },
       'hp': {
         name: 'Ponsel / Smartphone',
-        category: 'Limbah Elektronik (E-Waste)',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         hint: 'Ponsel wajib dipisahkan dari sampah rumah tangga biasa agar tidak mencemari lingkungan.'
       },
       'tip-ex': {
         name: 'Tip-Ex / Correction Fluid',
-        category: 'Limbah B3 Rumah Tangga',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         hint: 'Cairan koreksi kimia jangan dibuang ke saluran air.'
       },
       'kertas': {
         name: 'Kertas HVS / Buku',
-        category: 'Anorganik (Kertas)',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         hint: 'Kertas bersih dan kering bernilai tinggi di Bank Sampah.'
       },
       'kardus': {
         name: 'Kardus',
-        category: 'Anorganik (Kardus)',
+        category: 'Anorganik',
         bin: 'yellow',
         statType: 'anorganik',
         hint: 'Lipat kardus hingga pipih agar hemat tempat.'
       },
       'baterai': {
         name: 'Baterai Bekas',
-        category: 'Limbah B3',
+        category: 'Anorganik',
         bin: 'red',
         statType: 'b3',
         hint: 'Baterai mengandung logam berat berbahaya. Kumpulkan di titik khusus limbah B3.'
       },
       'sisa-makanan': {
         name: 'Sisa Makanan',
-        category: 'Sampah Organik',
+        category: 'Organik',
         bin: 'green',
         statType: 'organik',
         hint: 'Sisa makanan dapat diolah menjadi kompos atau pakan maggot.'
@@ -844,10 +844,10 @@
       }
 
       const binStyles = {
-        green: { pillClass: 'bg-emerald-100 text-emerald-800', dotClass: 'bg-emerald-600', binText: 'Tong Hijau (Organik)', binPillClass: 'bg-emerald-600 text-white', barColor: 'bg-emerald-500' },
-        yellow: { pillClass: 'bg-amber-100 text-amber-900', dotClass: 'bg-amber-500', binText: 'Tong Kuning (Anorganik)', binPillClass: 'bg-amber-400 text-slate-950', barColor: 'bg-amber-400' },
-        red: { pillClass: 'bg-rose-100 text-rose-800', dotClass: 'bg-rose-600', binText: 'Tong Merah (B3 / E-Waste)', binPillClass: 'bg-rose-600 text-white', barColor: 'bg-rose-600' },
-        gray: { pillClass: 'bg-slate-200 text-slate-800', dotClass: 'bg-slate-600', binText: 'Tong Abu-abu (Residu)', binPillClass: 'bg-slate-600 text-white', barColor: 'bg-slate-500' }
+        green: { pillClass: 'bg-emerald-100 text-emerald-800', dotClass: 'bg-emerald-600', binText: 'Organik', binPillClass: 'bg-emerald-600 text-white', barColor: 'bg-emerald-500' },
+        yellow: { pillClass: 'bg-amber-100 text-amber-900', dotClass: 'bg-amber-500', binText: 'Anorganik', binPillClass: 'bg-amber-400 text-slate-950', barColor: 'bg-amber-400' },
+        red: { pillClass: 'bg-rose-100 text-rose-800', dotClass: 'bg-rose-600', binText: 'Anorganik', binPillClass: 'bg-rose-600 text-white', barColor: 'bg-rose-600' },
+        gray: { pillClass: 'bg-slate-200 text-slate-800', dotClass: 'bg-slate-600', binText: 'Anorganik', binPillClass: 'bg-slate-600 text-white', barColor: 'bg-slate-500' }
       };
 
       const style = binStyles[itemData.bin] || binStyles.gray;
@@ -1104,7 +1104,7 @@
               } else {
                 updateResultUI({
                   name: '',
-                  category: 'Kategori belum dikenali',
+                  category: 'Anorganik',
                   bin: 'gray',
                   statType: 'anorganik',
                   hint: 'Objek dikenali. Periksa apakah ini barang guna ulang atau sampah.'
@@ -1135,7 +1135,7 @@
       if (predictions.length) {
         const topObj = predictions[0];
         const mapped = categoryMap[topObj.class];
-        updateResultUI(mapped || { name: '', category: 'Kategori belum dikenali', bin: 'gray', statType: 'anorganik', hint: 'Kategori sampah belum dapat ditentukan dengan yakin. Coba atur zoom atau pilih bantuan manual.' }, topObj.score, false);
+        updateResultUI(mapped || { name: '', category: 'Anorganik', bin: 'gray', statType: 'anorganik', hint: 'Sampah diklasifikasikan sebagai anorganik. Atur zoom atau pilih bantuan manual bila perlu.' }, topObj.score, false);
         setStatus(`Analisis selesai: ${predictions.length} area terdeteksi.`);
       } else { resetResultUI(); setStatus('Sampah tidak terdeteksi pada area fokus.', true); }
     }
@@ -1176,7 +1176,7 @@
               } else {
                 updateResultUI({
                   name: '',
-                  category: 'Kategori belum dikenali',
+                  category: 'Anorganik',
                   bin: 'gray',
                   statType: 'anorganik',
                   hint: 'Objek ditemukan pada foto.'
@@ -1277,4 +1277,4 @@
     });
   </script>
 </body>
-</html>
+  </html>
